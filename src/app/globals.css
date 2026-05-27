@@ -1,0 +1,100 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-background: #08080c;
+  --color-brand-card: rgba(18, 18, 26, 0.6);
+  --color-brand-border: rgba(255, 255, 255, 0.08);
+  
+  --color-brand-xp: #00ffcc;
+  --color-brand-xp-glow: rgba(0, 255, 204, 0.4);
+  
+  --color-brand-level: #9d4edd;
+  --color-brand-level-glow: rgba(157, 78, 221, 0.4);
+  
+  --color-brand-streak: #ff5a00;
+  --color-brand-streak-glow: rgba(255, 90, 0, 0.4);
+  
+  --color-brand-cyber: #0072ff;
+  --color-brand-cyber-glow: rgba(0, 114, 255, 0.4);
+
+  --shadow-glass: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  --shadow-neon-xp: 0 0 12px rgba(0, 255, 204, 0.35);
+  --shadow-neon-streak: 0 0 12px rgba(255, 90, 0, 0.35);
+  --shadow-neon-level: 0 0 12px rgba(157, 78, 221, 0.35);
+
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+:root {
+  --background: #08080c;
+  --foreground: #f3f4f6;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(8, 8, 12, 0.5);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Glassmorphism dynamic layouts */
+.glass-panel {
+  background: rgba(18, 18, 26, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+/* Animation utilities */
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 0.2;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(1.05);
+  }
+}
+
+.glow-bg {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  z-index: 0;
+  pointer-events: none;
+  animation: pulseGlow 8s ease-in-out infinite;
+}
+
+/* Phone notch frame details */
+.phone-notch {
+  width: 110px;
+  height: 30px;
+  background: #000;
+  border-bottom-left-radius: 18px;
+  border-bottom-right-radius: 18px;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 50;
+}
