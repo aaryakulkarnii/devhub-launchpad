@@ -194,7 +194,7 @@ export default function HomePage() {
               animate={{ y: 0 }}
               exit={{ y: '100%' }}
               transition={{ type: 'spring', damping: 28, stiffness: 260 }}
-              className="absolute bottom-0 left-0 right-0 max-h-[90%] glass-panel rounded-t-[35px] border-t border-white/12 p-6 flex flex-col gap-4 z-50 sm:rounded-b-[40px]"
+              className="absolute bottom-0 left-0 right-0 max-h-[90%] rounded-t-[35px] border-t border-white/15 bg-zinc-950/95 shadow-[0_-20px_60px_rgba(0,0,0,0.55)] p-6 flex flex-col gap-4 z-50 sm:rounded-b-[40px]"
             >
               <div className="flex items-center justify-between pb-2 border-b border-white/5">
                 <div className="flex items-center gap-2">
