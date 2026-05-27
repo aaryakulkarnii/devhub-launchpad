@@ -24,7 +24,7 @@ export default function OnboardingPage() {
   const [name, setName] = useState('');
   const [focusArea, setFocusArea] = useState('');
   const [stage, setStage] = useState('');
-  const [excites, setExcites] = useState('');
+  const [excites, setExcites] = useState<string[]>([]);
   
   // Terminal compilation loading state for Screen 4
   const [isCompiling, setIsCompiling] = useState(true);
@@ -60,7 +60,7 @@ export default function OnboardingPage() {
   const handleNextStep = () => {
     if (step === 1 && (!name.trim() || !focusArea)) return;
     if (step === 2 && !stage) return;
-    if (step === 3 && !excites) return;
+    if (step === 3 && excites.length === 0) return;
     setStep(prev => prev + 1);
   };
 
@@ -70,7 +70,7 @@ export default function OnboardingPage() {
 
   // Submit and enter Launchpad
   const handleLaunch = () => {
-    onboardUser(name, focusArea, stage, excites);
+    onboardUser(name, focusArea, stage, excites.join(', '));
     router.push('/home');
   };
   // Onboarding Options Configs
@@ -288,13 +288,17 @@ export default function OnboardingPage() {
 
               <div className="flex flex-col gap-2">
                 {excitesOptions.map((opt) => {
-                  const isSelected = excites === opt.id;
+                  const isSelected = excites.includes(opt.id);
                   return (
                     <button
                       key={opt.id}
                       onClick={() => {
-                        setExcites(opt.id);
-                        setTimeout(() => setStep(4), 250);
+                        setExcites((prev) => {
+                          if (prev.includes(opt.id)) {
+                            return prev.filter((id) => id !== opt.id);
+                          }
+                          return [...prev, opt.id];
+                        });
                       }}
                       className={`w-full glass-panel p-3.5 rounded-2xl border text-left flex items-center justify-between transition-all duration-300 ${
                         isSelected
@@ -318,7 +322,7 @@ export default function OnboardingPage() {
 
               <button
                 onClick={handleNextStep}
-                disabled={!excites}
+                disabled={excites.length === 0}
                 className="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-brand-level to-brand-xp text-white disabled:opacity-50 disabled:pointer-events-none active:scale-98 text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all duration-200"
               >
                 Compile Identity <ArrowRight size={14} />

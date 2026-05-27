@@ -57,25 +57,9 @@ export default function LandingPage() {
             </svg>
             <div className="absolute flex flex-col items-center justify-center text-center">
               <span className="text-[9px] uppercase font-bold text-zinc-500 tracking-wider">Level</span>
-              <span className="text-xl font-black text-white tracking-tighter leading-none">02</span>
-              <span className="text-[8px] text-brand-xp font-black mt-0.5">+450 XP</span>
+              <span className="text-xl font-black text-white tracking-tighter leading-none">0</span>
             </div>
           </div>
-
-          {/* Floating Builder Identity Card */}
-          <motion.div
-            animate={{ y: [-6, 6, -6] }}
-            transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-            className="absolute top-0 right-2 glass-panel p-2.5 rounded-xl border border-white/10 shadow-lg text-left w-[110px]"
-          >
-            <div className="flex items-center gap-1">
-              <div className="w-4 h-4 rounded-full bg-brand-xp/25 border border-brand-xp/30 flex items-center justify-center text-[7px] text-brand-xp font-black">
-                A
-              </div>
-              <span className="text-[8px] font-black text-white truncate">Aarya</span>
-            </div>
-            <p className="text-[7px] text-brand-xp font-bold uppercase mt-1">AI Explorer</p>
-          </motion.div>
 
           {/* Progress Timeline Preview */}
           <motion.div
