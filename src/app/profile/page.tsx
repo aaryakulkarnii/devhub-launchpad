@@ -10,6 +10,7 @@ import {
 import { useUserState } from '../../context/UserStateContext';
 import RadarChart from '../../components/RadarChart';
 import DNAVisualizer from '../../components/DNAVisualizer';
+import HeatmapCalendar from '../../components/HeatmapCalendar';
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -170,6 +171,19 @@ export default function ProfilePage() {
             animate={{ opacity: 1, y: 0 }}
             className="flex flex-col gap-3"
           >
+            <div className="glass-panel rounded-3xl border border-white/10 bg-black/30 p-4">
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <p className="text-[10px] uppercase tracking-[0.22em] text-zinc-500 font-bold">Proof Of Work</p>
+                  <h3 className="text-sm font-black text-white tracking-tight mt-2">Builder Consistency</h3>
+                </div>
+                <div className="text-[10px] uppercase tracking-[0.24em] text-brand-xp font-black">Consistency creates growth</div>
+              </div>
+              <div className="mt-4">
+                <HeatmapCalendar logs={profile.logs} streak={profile.currentStreak} />
+              </div>
+            </div>
+
             {profile.logs.length === 0 ? (
               /* Beautiful active empty state encouraging them to ship! */
               <div className="glass-panel p-6 rounded-3xl border border-white/5 text-center flex flex-col items-center gap-3">

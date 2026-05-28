@@ -118,6 +118,7 @@ export const UserStateProvider = ({ children }: { children: ReactNode }) => {
               id: log.id,
               content: log.content,
               timestamp: new Date(log.created_at).toLocaleDateString() || 'Just now',
+              date: log.created_at,
               applauds: log.applause_count,
               commentsCount: 0
             }));
@@ -478,11 +479,13 @@ export const UserStateProvider = ({ children }: { children: ReactNode }) => {
   const postBuildLog = async (content: string) => {
     if (!profile) return;
 
-    const timestampStr = 'Just now';
+    const now = new Date();
+    const timestampStr = now.toLocaleDateString();
     const newLog: BuildLog = {
       id: `log-${Date.now()}`,
       content,
       timestamp: timestampStr,
+      date: now.toISOString(),
       applauds: 0,
       commentsCount: 0
     };

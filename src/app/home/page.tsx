@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { useUserState } from '../../context/UserStateContext';
 import MissionCard from '../../components/MissionCard';
+import HeatmapCalendar from '../../components/HeatmapCalendar';
 
 export default function HomePage() {
   const router = useRouter();
@@ -118,7 +119,12 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* 4. PROGRESS OVERVIEW GRID */}
+      {/* 4. BUILDER CONSISTENCY */}
+      <div>
+        <HeatmapCalendar logs={profile.logs} streak={profile.currentStreak} />
+      </div>
+
+      {/* 5. PROGRESS OVERVIEW GRID */}
       <div>
         <h3 className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-3 flex items-center gap-1.5 pl-1">
           <Sparkles size={12} className="text-brand-xp" /> Progress Overview

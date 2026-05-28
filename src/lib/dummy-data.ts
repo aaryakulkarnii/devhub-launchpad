@@ -33,6 +33,7 @@ export interface BuildLog {
   id: string;
   content: string;
   timestamp: string;
+  date: string;
   applauds: number;
   hasApplauded?: boolean;
   commentsCount: number;
