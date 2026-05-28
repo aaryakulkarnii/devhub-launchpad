@@ -99,7 +99,7 @@ export async function POST(request: Request) {
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt }
       ],
-      maxTokens: 180,
+      max_tokens: 180,
       temperature: 0.2,
       top_p: 0.9
     });

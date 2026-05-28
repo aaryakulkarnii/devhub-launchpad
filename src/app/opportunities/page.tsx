@@ -14,25 +14,8 @@ export default function OpportunitiesPage() {
   const router = useRouter();
   const { profile, opportunities, joinOpportunity, isOnboarded } = useUserState();
 
-  const [activeTab, setActiveTab] = useState<'All' | 'Hackathon' | 'Internship' | 'Open Source' | 'Builder Challenge' | 'AI Event'>('All');
+  const [activeTab, setActiveTab] = useState<'All' | 'Hackathon' | 'Internship' | 'Open Source' | 'AI Challenge'>('All');
   const [acceptedId, setAcceptedId] = useState<string | null>(null);
-
-  const getOpportunityCategory = (opp: Opportunity) => {
-    if (opp.type === 'Hackathon') return 'Hackathon';
-    if (opp.type === 'Internship') return 'Internship';
-    if (opp.type === 'Open Source') return 'Open Source';
-    if (opp.type === 'AI Challenge' || opp.tags.some(tag => tag.toLowerCase().includes('ai'))) return 'AI Event';
-    if (opp.type === 'Freelance') return 'Builder Challenge';
-    return 'All';
-  };
-
-  const categorySummary = [
-    { title: 'Hackathons', label: 'Competition-ready builds', count: opportunities.filter((opp) => getOpportunityCategory(opp) === 'Hackathon').length },
-    { title: 'Internships', label: 'Paid builder roles', count: opportunities.filter((opp) => getOpportunityCategory(opp) === 'Internship').length },
-    { title: 'Open Source', label: 'Contribution proof-of-work', count: opportunities.filter((opp) => getOpportunityCategory(opp) === 'Open Source').length },
-    { title: 'Builder Challenges', label: 'Short project sprints', count: opportunities.filter((opp) => getOpportunityCategory(opp) === 'Builder Challenge').length },
-    { title: 'AI Events', label: 'AI-first experiences', count: opportunities.filter((opp) => getOpportunityCategory(opp) === 'AI Event').length },
-  ];
 
   // 1. Onboarding Guard
   useEffect(() => {
@@ -80,14 +63,14 @@ export default function OpportunitiesPage() {
   // Filtering opportunities
   const filteredOpps = opportunities.filter(opp => {
     if (activeTab === 'All') return true;
-    return getOpportunityCategory(opp) === activeTab;
+    return opp.type === activeTab;
   });
 
   // Sort by highest match score to prioritize matches first!
   const sortedOpps = [...filteredOpps].sort((a, b) => getMatchScore(b).score - getMatchScore(a).score);
 
-  const tabs: ('All' | 'Hackathon' | 'Internship' | 'Open Source' | 'Builder Challenge' | 'AI Event')[] = [
-    'All', 'Hackathon', 'Internship', 'Open Source', 'Builder Challenge', 'AI Event'
+  const tabs: ('All' | 'Hackathon' | 'Internship' | 'Open Source' | 'AI Challenge')[] = [
+    'All', 'Hackathon', 'Internship', 'Open Source', 'AI Challenge'
   ];
 
   return (
@@ -109,27 +92,11 @@ export default function OpportunitiesPage() {
       {/* Page Header */}
       <div>
         <h1 className="text-xl font-black text-white tracking-tight mt-3">
-          Next Moves Hub
+          Rocket Growth Challenges
         </h1>
         <p className="text-xs text-zinc-400 mt-1 font-medium leading-relaxed">
-          A single hub for hackathons, internships, open source, AI events and focused builder challenges.
+          No generic job listings. Only curated, high-momentum moves to establish your proof-of-work.
         </p>
-      </div>
-
-      <div className="grid grid-cols-2 xl:grid-cols-5 gap-3 mt-4">
-        {categorySummary.map((category) => (
-          <div key={category.title} className="rounded-3xl border border-white/5 bg-zinc-950/70 p-4 shadow-[0_8px_30px_rgba(0,0,0,0.25)]">
-            <p className="text-[9px] uppercase tracking-[0.35em] text-zinc-500 font-semibold mb-2">
-              {category.title}
-            </p>
-            <div className="flex items-end justify-between gap-3">
-              <span className="text-2xl font-black text-white">{category.count}</span>
-              <span className="text-[10px] text-zinc-400 font-medium text-right">
-                {category.label}
-              </span>
-            </div>
-          </div>
-        ))}
       </div>
 
       {/* Horizontal filter capsules */}
