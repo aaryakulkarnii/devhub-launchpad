@@ -15,13 +15,14 @@ export default function HomePage() {
     profile, 
     isOnboarded,
     opportunities,
+    awardXpAction,
   } = useUserState();
 
   const [goals, setGoals] = useState([
-    { id: 1, text: 'Complete Daily DSA challenge (+50 XP)', done: false },
-    { id: 2, text: 'Log a build updates log (+15 XP)', done: true },
-    { id: 3, text: 'Connect with a matched builder (+10 XP)', done: false },
-    { id: 4, text: 'Review new internship matches (+5 XP)', done: false }
+    { id: 1, text: 'Complete Daily DSA challenge (+50 XP)', done: false, xp: 50 },
+    { id: 2, text: 'Log a build updates log (+15 XP)', done: true, xp: 15 },
+    { id: 3, text: 'Connect with a matched builder (+10 XP)', done: false, xp: 10 },
+    { id: 4, text: 'Review new internship matches (+5 XP)', done: false, xp: 5 }
   ]);
 
   // Guard onboarding
@@ -34,7 +35,20 @@ export default function HomePage() {
   if (!profile) return null;
 
   const toggleGoal = (id: number) => {
-    setGoals(goals.map(g => g.id === id ? { ...g, done: !g.done } : g));
+    const updatedGoals = goals.map(g => {
+      if (g.id === id) {
+        const nextDone = !g.done;
+        // Award XP if completing, subtract if unticking
+        if (nextDone) {
+          awardXpAction(g.xp, g.text);
+        } else {
+          awardXpAction(-g.xp, `Undid: ${g.text}`);
+        }
+        return { ...g, done: nextDone };
+      }
+      return g;
+    });
+    setGoals(updatedGoals);
   };
 
   // Mock Activity summary for other builders

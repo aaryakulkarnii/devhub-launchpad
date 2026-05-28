@@ -165,7 +165,7 @@ export default function MobileFrame({
         )}
 
         {/* Mobile Dashboard Body Content - takes full viewport width */}
-        <main className="flex-1 flex flex-col overflow-y-auto px-4 py-4 pb-6 w-full">
+        <main className="flex-1 flex flex-col overflow-y-auto px-4 py-4 pb-24 w-full">
           {children}
         </main>
 

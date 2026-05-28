@@ -155,10 +155,7 @@ export default function RadarChart({ metrics }: RadarChartProps) {
                 y={p.labelY}
                 textAnchor={textAnchor}
                 dy={dy}
-                fill="rgba(255, 255, 255, 0.45)"
-                fontSize="6.5"
-                fontWeight="700"
-                className="tracking-wider uppercase select-none"
+                className="fill-zinc-550 dark:fill-zinc-400 tracking-wider uppercase select-none text-[6.5px] font-bold"
               >
                 {keys[i]}
               </text>
@@ -168,10 +165,7 @@ export default function RadarChart({ metrics }: RadarChartProps) {
                 y={p.labelY + (p.labelY > cy + r ? 5 : -5)}
                 textAnchor={textAnchor}
                 dy={dy}
-                fill="#00ffcc"
-                fontSize="5.5"
-                fontWeight="900"
-                className="font-mono select-none"
+                className="fill-brand-xp dark:fill-brand-cyber font-mono select-none text-[5.5px] font-black"
               >
                 {values[i]}
               </text>

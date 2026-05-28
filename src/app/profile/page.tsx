@@ -72,16 +72,16 @@ export default function ProfilePage() {
         </div>
 
         {/* XP Ledger Info */}
-        <div className="w-full grid grid-cols-3 gap-2 mt-2 pt-3 border-t border-brand-border text-center relative z-10">
-          <div>
+        <div className="w-full flex flex-wrap gap-2 mt-2 pt-3 border-t border-brand-border text-center justify-between relative z-10">
+          <div className="flex-1 min-w-[70px]">
             <span className="text-[8px] uppercase font-bold text-zinc-500 dark:text-zinc-400 tracking-wider">Level</span>
             <span className="text-sm font-black text-zinc-900 dark:text-white block mt-0.5">{profile.level}</span>
           </div>
-          <div className="border-l border-r border-brand-border">
+          <div className="flex-1 min-w-[70px] border-l border-r border-brand-border px-1">
             <span className="text-[8px] uppercase font-bold text-zinc-500 dark:text-zinc-400 tracking-wider">Total XP</span>
             <span className="text-sm font-black text-brand-xp block mt-0.5">{profile.xp}</span>
           </div>
-          <div>
+          <div className="flex-1 min-w-[70px]">
             <span className="text-[8px] uppercase font-bold text-zinc-500 dark:text-zinc-400 tracking-wider">Streak</span>
             <span className="text-sm font-black text-brand-streak block mt-0.5">🔥 {profile.currentStreak}d</span>
           </div>

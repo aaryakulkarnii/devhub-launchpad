@@ -59,7 +59,7 @@ export default function MessagesPage() {
   ];
 
   return (
-    <div className="flex-1 flex flex-col px-4 py-5 select-none relative z-10 gap-6 pb-20 max-w-5xl mx-auto w-full text-left">
+    <div className="flex-1 flex flex-col px-2 sm:px-4 py-5 select-none relative z-10 gap-4 sm:gap-6 pb-20 max-w-5xl mx-auto w-full text-left overflow-x-hidden">
       
       {/* Title Header */}
       <div>
@@ -72,44 +72,44 @@ export default function MessagesPage() {
       </div>
 
       {/* Main Container panel */}
-      <div className="glass-panel rounded-3xl border border-brand-border bg-white dark:bg-zinc-900/10 overflow-hidden flex h-[500px]">
+      <div className="glass-panel rounded-3xl border border-brand-border bg-white dark:bg-zinc-900/10 overflow-hidden flex flex-col md:flex-row h-[550px] md:h-[500px]">
         
-        {/* 1. Left Channel Sidebar */}
-        <div className="w-[180px] border-r border-brand-border bg-zinc-50/50 dark:bg-zinc-950/20 p-4 flex flex-col gap-5 select-none shrink-0">
-          <div className="flex flex-col gap-2">
-            <span className="text-[9px] text-zinc-450 dark:text-zinc-500 font-black uppercase tracking-wider pl-1">Channels</span>
+        {/* 1. Top Channels switcher for mobile, side channel list for desktop */}
+        <div className="md:w-[180px] border-b md:border-b-0 md:border-r border-brand-border bg-zinc-50/50 dark:bg-zinc-950/20 p-3 md:p-4 flex flex-row md:flex-col gap-3 md:gap-5 select-none shrink-0 overflow-x-auto md:overflow-x-visible items-center md:items-stretch scrollbar-none">
+          <span className="text-[9px] text-zinc-450 dark:text-zinc-550 font-black uppercase tracking-wider pl-1 whitespace-nowrap md:block">Channels</span>
+          <div className="flex flex-row md:flex-col gap-1.5 md:gap-2 flex-1 md:flex-none">
             {channels.map(c => (
               <button
                 key={c}
                 onClick={() => setActiveChannel(c)}
-                className={`flex items-center gap-1.5 px-2 py-1.5 rounded-lg text-xs font-bold transition-colors ${activeChannel === c ? 'bg-zinc-200/60 dark:bg-white/10 text-zinc-900 dark:text-white font-extrabold' : 'text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-350'}`}
+                className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-bold transition-colors whitespace-nowrap ${activeChannel === c ? 'bg-zinc-200/60 dark:bg-white/10 text-zinc-900 dark:text-white font-extrabold' : 'text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-300'}`}
               >
-                <Hash size={13} /> {c.substring(1)}
+                <Hash size={13} className="shrink-0" /> {c.substring(1)}
               </button>
             ))}
           </div>
         </div>
 
         {/* 2. Middle Chat Box */}
-        <div className="flex-1 flex flex-col justify-between h-full bg-white dark:bg-zinc-900/5">
+        <div className="flex-1 flex flex-col justify-between min-h-0 bg-white dark:bg-zinc-900/5">
           {/* Channel Name Header */}
-          <div className="border-b border-brand-border p-3.5 flex items-center justify-between bg-zinc-50/30">
+          <div className="border-b border-brand-border p-3 flex items-center justify-between bg-zinc-50/30">
             <span className="text-xs font-black text-zinc-900 dark:text-white flex items-center gap-1.5"><Hash size={13} /> {activeChannel.substring(1)}</span>
             <span className="text-[9px] text-zinc-450 font-bold uppercase">2 Members Online</span>
           </div>
 
           {/* Messages Feed */}
-          <div className="flex-1 p-4 flex flex-col gap-4 overflow-y-auto">
+          <div className="flex-1 p-3 sm:p-4 flex flex-col gap-4 overflow-y-auto min-h-0">
             {messages.map(m => (
               <div key={m.id} className="flex items-start gap-3 text-left">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={m.avatar} alt="avatar" className="w-8 h-8 rounded-full border border-brand-border bg-zinc-100 shrink-0" />
-                <div className="flex flex-col gap-0.5">
+                <div className="flex flex-col gap-0.5 min-w-0">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-black text-zinc-850 dark:text-white">{m.sender}</span>
-                    <span className="text-[8px] text-zinc-450 dark:text-zinc-550 font-semibold">{m.time}</span>
+                    <span className="text-xs font-black text-zinc-850 dark:text-white truncate">{m.sender}</span>
+                    <span className="text-[8px] text-zinc-450 dark:text-zinc-550 font-semibold shrink-0">{m.time}</span>
                   </div>
-                  <p className="text-xs text-zinc-700 dark:text-zinc-250 font-semibold leading-relaxed mt-0.5">{m.text}</p>
+                  <p className="text-xs text-zinc-700 dark:text-zinc-250 font-semibold leading-relaxed mt-0.5 break-words">{m.text}</p>
                 </div>
               </div>
             ))}
@@ -125,7 +125,7 @@ export default function MessagesPage() {
               value={chatInput}
               onChange={(e) => setChatInput(e.target.value)}
               placeholder={`Message ${activeChannel}...`}
-              className="flex-1 bg-zinc-50 dark:bg-black/20 border border-brand-border rounded-xl px-3.5 py-2 text-xs text-zinc-900 dark:text-white placeholder-zinc-450 focus:outline-none"
+              className="flex-1 bg-zinc-50 dark:bg-black/20 border border-brand-border rounded-xl px-3 py-2 text-xs text-zinc-900 dark:text-white placeholder-zinc-450 focus:outline-none min-w-0"
             />
             <button type="submit" className="p-2 rounded-lg bg-brand-xp text-white dark:text-black hover:opacity-95 shrink-0">
               <Send size={14} className="stroke-[2.5]" />

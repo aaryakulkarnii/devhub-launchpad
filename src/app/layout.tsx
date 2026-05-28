@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { UserStateProvider } from "../context/UserStateContext";
 import MobileFrame from "../components/MobileFrame";
+import BottomNav from "../components/BottomNav";
 import XPBurst from "../components/XPBurst";
 
 const geistSans = Geist({
@@ -31,6 +32,7 @@ export default function RootLayout({
         <UserStateProvider>
           <MobileFrame overlay={
             <>
+              <BottomNav />
               <XPBurst />
             </>
           }>

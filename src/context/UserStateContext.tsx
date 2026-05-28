@@ -38,6 +38,7 @@ interface UserStateContextType {
   completeMission: (missionId: string) => void;
   applaudFeedItem: (id: string) => void;
   joinOpportunity: (id: string) => void;
+  awardXpAction: (amount: number, reason: string) => void;
   resetApp: () => void;
 }
 
@@ -1077,6 +1078,36 @@ export const UserStateProvider = ({ children }: { children: ReactNode }) => {
   };
 
 
+  // Expose manual award XP action for checklists and custom goals
+  const awardXpAction = async (amount: number, reason: string) => {
+    if (!profile) return;
+    const { updatedProfile, updatedFeed } = awardXP(profile, amount, `earned +${amount} XP: ${reason}`, 'milestone_reached');
+    
+    if (isSupabaseConfigured && supabase) {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session?.user) {
+          const userId = session.user.id;
+          await supabase.from('xp_transactions').insert({
+            user_id: userId,
+            amount: amount,
+            activity_type: 'custom_goal',
+            description: reason
+          });
+          await supabase.from('builder_profiles').update({
+            xp: updatedProfile.xp,
+            level: updatedProfile.level,
+            builder_title: updatedProfile.builderTitle,
+            momentum_score: updatedProfile.momentumScore
+          }).eq('id', userId);
+        }
+      } catch (err: any) {
+        console.error('Error syncing dynamic award XP to Supabase:', err.message);
+      }
+    }
+    saveState(updatedProfile, updatedFeed);
+  };
+
   return (
     <UserStateContext.Provider value={{
       profile,
@@ -1099,6 +1130,7 @@ export const UserStateProvider = ({ children }: { children: ReactNode }) => {
       completeMission,
       applaudFeedItem,
       joinOpportunity,
+      awardXpAction,
       resetApp
     }}>
       {children}
