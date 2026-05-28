@@ -27,8 +27,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full bg-black">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased h-full overflow-hidden`}>
+    <html lang="en" className="h-full bg-brand-background">
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased h-full overflow-y-auto lg:overflow-hidden bg-brand-background`}>
         <UserStateProvider>
           <MobileFrame overlay={
             <>
