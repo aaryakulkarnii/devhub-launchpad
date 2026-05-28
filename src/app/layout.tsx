@@ -3,7 +3,6 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { UserStateProvider } from "../context/UserStateContext";
 import MobileFrame from "../components/MobileFrame";
-import BottomNav from "../components/BottomNav";
 import XPBurst from "../components/XPBurst";
 
 const geistSans = Geist({
@@ -27,12 +26,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full bg-brand-background">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased h-full overflow-y-auto lg:overflow-hidden bg-brand-background`}>
+    <html lang="en" className="bg-brand-background">
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-brand-background`}>
         <UserStateProvider>
           <MobileFrame overlay={
             <>
-              <BottomNav />
               <XPBurst />
             </>
           }>

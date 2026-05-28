@@ -62,16 +62,6 @@ export default function MobileFrame({
 
           <div className="flex items-center gap-2">
             {profile && (
-              <button 
-                onClick={resetApp} 
-                className="bg-red-500/10 hover:bg-red-500/20 text-red-500 dark:text-red-400 text-[8px] font-bold border border-red-500/20 px-2 py-0.5 rounded-full flex items-center gap-1 transition-colors duration-200"
-                title="Reset Launchpad Onboarding"
-              >
-                <RefreshCw size={7} />
-                Reset State
-              </button>
-            )}
-            {profile && (
               /* eslint-disable-next-line @next/next/no-img-element */
               <img src={profile.photoUrl} alt="avatar" className="w-6 h-6 rounded-full border border-brand-border bg-zinc-100" />
             )}
@@ -175,7 +165,7 @@ export default function MobileFrame({
         )}
 
         {/* Mobile Dashboard Body Content - takes full viewport width */}
-        <main className="flex-1 flex flex-col overflow-y-auto px-4 py-4 pb-24 w-full">
+        <main className="flex-1 flex flex-col overflow-y-auto px-4 py-4 pb-6 w-full">
           {children}
         </main>
 
