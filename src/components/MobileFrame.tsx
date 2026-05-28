@@ -78,6 +78,18 @@ export default function MobileFrame({
       <DesktopShell>
         {children}
       </DesktopShell>
+
+      <div className="pointer-events-none absolute inset-x-0 bottom-6 z-20 flex justify-center lg:justify-end px-6">
+        <a
+          href="https://devhub.wtf/"
+          target="_blank"
+          rel="noreferrer"
+          className="pointer-events-auto text-[10px] text-zinc-500/80 hover:text-zinc-200 transition-colors duration-200 text-center lg:text-right"
+        >
+          <span className="block">to know more about devhub</span>
+          <span className="font-semibold text-zinc-300">visit devhub.wtf</span>
+        </a>
+      </div>
     </div>
   );
 }

@@ -89,7 +89,28 @@ export default function ProfilePage() {
 
       </div>
 
-      {/* 2. Horizontal navigation tab capsules */}
+      {/* 2. Community invite */}
+      <div className="glass-panel rounded-3xl border border-white/10 bg-white/5 p-4 text-left relative z-10">
+        <div className="flex flex-col gap-3">
+          <div>
+            <p className="text-[10px] uppercase tracking-[0.3em] text-zinc-500">Builder community</p>
+            <h2 className="text-base font-black text-white mt-2">Join the DevHub builder community</h2>
+          </div>
+          <p className="text-sm text-zinc-400 leading-relaxed">
+            Connect with other builders, discover hackathons, projects, and opportunities in one place.
+          </p>
+          <a
+            href="https://chat.whatsapp.com/FzBACCacUxiLciCcs0KlEz"
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex w-fit rounded-2xl bg-brand-xp/10 border border-brand-xp/20 px-4 py-3 text-sm font-semibold text-brand-xp transition hover:bg-brand-xp/15"
+          >
+            Join community
+          </a>
+        </div>
+      </div>
+
+      {/* 3. Horizontal navigation tab capsules */}
       <div className="grid grid-cols-3 bg-black/45 border border-white/5 p-1 rounded-2xl relative z-10 select-none">
         {(['DNA', 'Timeline', 'Logs'] as const).map((tab) => {
           const isSelected = activeTab === tab;
