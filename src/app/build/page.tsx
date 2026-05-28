@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { 
-  Hammer, Terminal, Plus
+  Hammer, Terminal, Plus, Sparkles
 } from 'lucide-react';
 import { useUserState } from '../../context/UserStateContext';
 import HeatmapCalendar from '../../components/HeatmapCalendar';
@@ -152,6 +152,36 @@ export default function BuildPage() {
               Shipping Consistency
             </h3>
             <HeatmapCalendar logs={profile.logs} streak={profile.currentStreak} />
+          </div>
+
+          {/* Momentum AI Build Audit Panel */}
+          <div className="glass-panel p-4 rounded-3xl border border-brand-border bg-white dark:bg-zinc-900/10 text-left">
+            <h3 className="text-xs font-black text-zinc-900 dark:text-white uppercase tracking-wider mb-3 flex items-center gap-1.5">
+              <Sparkles size={14} className="text-brand-cyber animate-pulse" /> Momentum AI Build Audit
+            </h3>
+            
+            <div className="flex flex-col gap-3">
+              <div className="p-3 bg-brand-cyber/5 rounded-2xl border border-brand-cyber/10 text-[11px] text-zinc-700 dark:text-zinc-350 leading-relaxed font-semibold">
+                {profile.logs.length === 0 ? (
+                  "✨ Your shipping log is currently empty. Post your first micro-update today to kickstart AI momentum audits!"
+                ) : profile.logs.length < 3 ? (
+                  "💡 Your initial logs look promising. Focus on documenting specific challenges resolved, technology stack libraries utilized, and measurable outcomes to boost your resume and ATS keywords scoring."
+                ) : (
+                  `📈 Great shipping frequency! Your last updates show a strong concentration in focus-area tags. Next step: balance your radar chart by adding more database routing and testing logs.`
+                )}
+              </div>
+              <div className="flex flex-col gap-2.5 mt-1">
+                <span className="text-[9px] uppercase font-black text-zinc-450 dark:text-zinc-500 tracking-wider">Timeline Balance Insights</span>
+                <div className="flex items-center justify-between text-[10px] text-zinc-650 dark:text-zinc-400 font-bold">
+                  <span>Frontend Focus</span>
+                  <span>{profile.focusArea.includes('Web') ? 'High Overlap (80%)' : 'Moderate Overlap (50%)'}</span>
+                </div>
+                <div className="flex items-center justify-between text-[10px] text-zinc-650 dark:text-zinc-400 font-bold">
+                  <span>Algorithmic Rigor</span>
+                  <span>{profile.radar.coding > 60 ? 'Optimal' : 'Needs attention'}</span>
+                </div>
+              </div>
+            </div>
           </div>
 
         </div>

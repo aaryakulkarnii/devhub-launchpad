@@ -106,9 +106,17 @@ export default function OpportunitiesPage() {
         >
           ← Dashboard
         </button>
-        <span className="text-[9px] bg-brand-cyber/10 text-brand-cyber border border-brand-cyber/20 px-2.5 py-0.5 rounded-full font-bold uppercase tracking-widest">
-          Curated Opportunities
-        </span>
+        <div className="flex items-center gap-2">
+          <button 
+            onClick={() => router.push('/resume-intelligence')}
+            className="text-[9px] bg-brand-xp/10 text-brand-xp border border-brand-xp/20 px-2.5 py-0.5 rounded-full font-bold uppercase tracking-widest hover:bg-brand-xp/15 transition-colors"
+          >
+            Scan Resume ATS
+          </button>
+          <span className="text-[9px] bg-brand-cyber/10 text-brand-cyber border border-brand-cyber/20 px-2.5 py-0.5 rounded-full font-bold uppercase tracking-widest">
+            Curated Opportunities
+          </span>
+        </div>
       </div>
 
       {/* Page Header */}
@@ -179,7 +187,7 @@ export default function OpportunitiesPage() {
                 </p>
 
                 {/* AI Rationale Tip */}
-                <div className="mt-3 p-3 rounded-xl border border-brand-cyber/10 bg-brand-cyber/5 text-[11px] text-zinc-700 dark:text-zinc-300 font-medium leading-relaxed">
+                <div className="mt-3 p-3 rounded-xl border border-brand-cyber/10 bg-brand-cyber/5 text-[11px] text-zinc-700 dark:text-zinc-300 font-semibold leading-relaxed">
                   💡 <b>AI Recommendation:</b> {match.reason}
                 </div>
 
@@ -193,19 +201,32 @@ export default function OpportunitiesPage() {
                       <img src={match.teammate.avatar} alt="avatar" className="w-4 h-4 rounded-full border border-brand-border" />
                       <span className="text-[10px] font-black text-zinc-850 dark:text-white">{match.teammate.name}</span>
                     </div>
-                    <span className="text-[8px] bg-brand-level/10 text-brand-level border border-brand-level/20 px-1.5 py-0.5 rounded font-bold uppercase">
+                    <span className="text-[8px] bg-brand-level/10 text-brand-level border border-brand-level/20 px-1.5 py-0.5 rounded font-black uppercase">
                       {match.teammate.role}
                     </span>
                   </div>
                 )}
 
-                {/* Tag Capsules */}
-                <div className="flex items-center gap-1.5 flex-wrap mt-3.5">
-                  {opp.tags.map((tag) => (
-                    <span key={tag} className="text-[9px] bg-zinc-50 dark:bg-black/45 border border-brand-border text-zinc-550 dark:text-zinc-500 px-2 py-0.5 rounded-md font-bold uppercase tracking-wide">
-                      {tag}
-                    </span>
-                  ))}
+                {/* Skill Overlap Breakdown */}
+                <div className="mt-3.5 flex flex-col gap-1.5 text-left">
+                  <span className="text-[9px] uppercase font-black text-zinc-450 dark:text-zinc-500 tracking-wider">Skill Overlap Breakdown</span>
+                  <div className="flex flex-wrap gap-1.5 mt-0.5">
+                    {opp.tags.map(tag => {
+                      const userHasIt = profile.techStack?.some(t => t.toLowerCase() === tag.toLowerCase()) || profile.interests?.some(i => i.toLowerCase() === tag.toLowerCase());
+                      return (
+                        <span 
+                          key={tag} 
+                          className={`text-[9px] px-2 py-0.5 rounded-md font-bold uppercase tracking-wide border flex items-center gap-1 ${
+                            userHasIt 
+                              ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20' 
+                              : 'bg-zinc-50 dark:bg-black/45 border-brand-border text-zinc-400 dark:text-zinc-500'
+                          }`}
+                        >
+                          {tag} {userHasIt ? '✓' : '✗'}
+                        </span>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
 

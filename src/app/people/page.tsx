@@ -76,13 +76,20 @@ export default function PeoplePage() {
                     <div className="flex items-start gap-3">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img src={mate.avatar} alt="avatar" className="w-10 h-10 rounded-full border border-brand-border bg-zinc-100" />
-                      <div className="flex flex-col text-left gap-0.5">
+                      <div className="flex flex-col text-left gap-1">
                         <div className="flex items-center gap-2">
                           <span className="text-sm font-black text-zinc-850 dark:text-white leading-tight">{mate.name}</span>
                           <span className="text-[9px] bg-brand-cyber/10 text-brand-cyber px-2 py-0.5 rounded font-black uppercase tracking-wider">{mate.matchScore}% Match</span>
                         </div>
                         <span className="text-[10px] text-brand-level font-black uppercase tracking-wider">{mate.role}</span>
                         <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1 font-semibold">Skills: {mate.skills.join(', ')}</p>
+                        <p className="text-[10px] text-zinc-500 dark:text-zinc-450 italic mt-0.5 bg-brand-cyber/5 p-2 rounded-xl border border-brand-cyber/10">
+                          💡 <b>AI Alignment:</b> {mate.role === 'AI Engineer' 
+                            ? 'Excellent technical overlap! Aarav complements your projects with LLM routing and predictive APIs.' 
+                            : mate.role === 'Frontend Architect' 
+                            ? 'Great UX collaborator! Rohan matches your stack and complements backend design with Framer motion.' 
+                            : 'Good backend overlap! Ananya strengthens your database migrations and API integrations.'}
+                        </p>
                       </div>
                     </div>
 

@@ -8,6 +8,12 @@ import {
   INITIAL_MISSIONS, INITIAL_FEED, SUGGESTED_OPPORTUNITIES, SYNTHETIC_NAMES, SYNTHETIC_LOGS 
 } from '../lib/dummy-data';
 import { supabase, isSupabaseConfigured } from '../lib/supabaseClient';
+import { 
+  AIDailyGoal, generateDailyGoals 
+} from '../lib/momentum-ai';
+import {
+  ParsedResumeData, parseResumeContent
+} from '../lib/resume-parser';
 
 interface UserStateContextType {
   profile: BuilderProfile | null;
@@ -40,6 +46,10 @@ interface UserStateContextType {
   joinOpportunity: (id: string) => void;
   awardXpAction: (amount: number, reason: string) => void;
   resetApp: () => void;
+  resumeData: ParsedResumeData | null;
+  analyzeResume: (content: string) => void;
+  dailyGoals: AIDailyGoal[];
+  toggleDailyGoal: (goalId: string) => void;
 }
 
 const UserStateContext = createContext<UserStateContextType | undefined>(undefined);
@@ -51,6 +61,36 @@ export const UserStateProvider = ({ children }: { children: ReactNode }) => {
   const [teammates, setTeammates] = useState<Teammate[]>(MOCK_TEAMMATES);
   const [aiSuggestions, setAiSuggestions] = useState<MomentumAISuggestion[]>([]);
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  const [resumeData, setResumeData] = useState<ParsedResumeData | null>(null);
+  const [dailyGoals, setDailyGoals] = useState<AIDailyGoal[]>([]);
+
+  // Generate goals whenever profile updates
+  useEffect(() => {
+    if (profile && dailyGoals.length === 0) {
+      setDailyGoals(generateDailyGoals(profile));
+    }
+  }, [profile, dailyGoals]);
+
+  const analyzeResume = (content: string) => {
+    if (profile) {
+      setResumeData(parseResumeContent(content, profile));
+    }
+  };
+
+  const toggleDailyGoal = (goalId: string) => {
+    setDailyGoals(prev => prev.map(g => {
+      if (g.id === goalId) {
+        const nextDone = !g.done;
+        if (nextDone) {
+          awardXpAction(g.xp, `Completed Daily AI Goal: ${g.text}`);
+        } else {
+          awardXpAction(-g.xp, `Undid Daily AI Goal: ${g.text}`);
+        }
+        return { ...g, done: nextDone };
+      }
+      return g;
+    }));
+  };
 
   // Load and apply theme on client mount
   useEffect(() => {
@@ -1131,7 +1171,11 @@ export const UserStateProvider = ({ children }: { children: ReactNode }) => {
       applaudFeedItem,
       joinOpportunity,
       awardXpAction,
-      resetApp
+      resetApp,
+      resumeData,
+      analyzeResume,
+      dailyGoals,
+      toggleDailyGoal
     }}>
       {children}
     </UserStateContext.Provider>

@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { 
-  Home, Compass, User, Terminal, Flame, Sun, Moon,
+  Home, Compass, User, Terminal, Flame,
   Hammer, Users, BrainCircuit, MessageSquare, Bell, Bookmark, Sparkles
 } from 'lucide-react';
 import { useUserState } from '../context/UserStateContext';
@@ -70,23 +70,7 @@ export default function DesktopShell({ children }: { children: React.ReactNode }
           })}
         </nav>
 
-        {/* THEME SWITCHER */}
-        <button 
-          onClick={toggleTheme}
-          className="flex items-center justify-between w-full px-4 py-2.5 rounded-xl border border-brand-border bg-zinc-50 dark:bg-zinc-900/10 hover:bg-zinc-100 dark:hover:bg-zinc-900/30 text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200 transition-all duration-200 text-[10px] font-black uppercase tracking-wider"
-        >
-          <span className="flex items-center gap-2">
-            {theme === 'light' ? (
-              <Sun size={14} className="text-amber-500" />
-            ) : (
-              <Moon size={14} className="text-brand-xp" />
-            )}
-            <span>{theme === 'light' ? 'Light Mode' : 'Dark Mode'}</span>
-          </span>
-          <span className="text-[8px] bg-zinc-200 dark:bg-white/5 border border-brand-border text-zinc-400 dark:text-zinc-600 px-1.5 py-0.5 rounded font-black">
-            Theme
-          </span>
-        </button>
+
 
         {/* USER PROFILE INFO */}
         {profile && (

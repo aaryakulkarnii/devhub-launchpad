@@ -4,10 +4,12 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { 
-  Flame, Zap, Trophy, ExternalLink, Calendar, Bell, Search, Award, CheckSquare, Square, ChevronRight, Users, Sparkles
+  Flame, Zap, Trophy, ExternalLink, Calendar, Bell, Search, Award, CheckSquare, Square, ChevronRight, Users, Sparkles, AlertTriangle, ShieldCheck, ArrowRight
 } from 'lucide-react';
 import { useUserState } from '../../context/UserStateContext';
 import { MOCK_LEADERBOARD } from '../../lib/dummy-data';
+import { getAIRecommendations, getInterviewInsights } from '../../lib/momentum-ai';
+import ResumeIntelligence from '../../components/ResumeIntelligence';
 
 export default function HomePage() {
   const router = useRouter();
@@ -16,14 +18,9 @@ export default function HomePage() {
     isOnboarded,
     opportunities,
     awardXpAction,
+    dailyGoals,
+    toggleDailyGoal
   } = useUserState();
-
-  const [goals, setGoals] = useState([
-    { id: 1, text: 'Complete Daily DSA challenge (+50 XP)', done: false, xp: 50 },
-    { id: 2, text: 'Log a build updates log (+15 XP)', done: true, xp: 15 },
-    { id: 3, text: 'Connect with a matched builder (+10 XP)', done: false, xp: 10 },
-    { id: 4, text: 'Review new internship matches (+5 XP)', done: false, xp: 5 }
-  ]);
 
   // Guard onboarding
   useEffect(() => {
@@ -34,22 +31,10 @@ export default function HomePage() {
 
   if (!profile) return null;
 
-  const toggleGoal = (id: number) => {
-    const updatedGoals = goals.map(g => {
-      if (g.id === id) {
-        const nextDone = !g.done;
-        // Award XP if completing, subtract if unticking
-        if (nextDone) {
-          awardXpAction(g.xp, g.text);
-        } else {
-          awardXpAction(-g.xp, `Undid: ${g.text}`);
-        }
-        return { ...g, done: nextDone };
-      }
-      return g;
-    });
-    setGoals(updatedGoals);
-  };
+  const interview = getInterviewInsights(profile);
+  const recommendations = getAIRecommendations(profile);
+
+
 
   // Mock Activity summary for other builders
   const recentActivity = [
@@ -104,19 +89,51 @@ export default function HomePage() {
       {/* MAIN TWO-COLUMN DASHBOARD CONTENT */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
-        {/* LEFT COLUMN: Goals & AI Recommendations */}
+        {/* LEFT COLUMN: Goals, AI recommendations, and Resume Intelligence */}
         <div className="lg:col-span-2 flex flex-col gap-6">
           
+          {/* AI Mentor Recommendations Panel */}
+          <div className="glass-panel p-5 rounded-3xl border border-brand-border bg-white dark:bg-zinc-900/10">
+            <h3 className="text-sm font-black text-zinc-900 dark:text-white uppercase tracking-tight mb-4 flex items-center gap-2">
+              <Sparkles size={16} className="text-brand-xp animate-pulse" /> Momentum AI Mentor Insights
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              {recommendations.map((rec) => (
+                <div 
+                  key={rec.id} 
+                  onClick={() => router.push(`/${rec.actionType}`)}
+                  className="flex flex-col justify-between p-3.5 rounded-2xl border border-brand-border bg-zinc-50 dark:bg-black/35 hover:border-zinc-350 dark:hover:border-white/10 transition-colors cursor-pointer text-left"
+                >
+                  <div>
+                    <span className="text-[8px] bg-brand-cyber/15 text-brand-cyber px-2 py-0.5 rounded font-black uppercase tracking-wider">
+                      {rec.highlight}
+                    </span>
+                    <h4 className="text-xs font-black text-zinc-800 dark:text-white tracking-tight mt-2">
+                      {rec.title}
+                    </h4>
+                    <p className="text-[10px] text-zinc-500 dark:text-zinc-400 font-medium leading-relaxed mt-1">
+                      {rec.description}
+                    </p>
+                  </div>
+                  <div className="flex items-center justify-between border-t border-brand-border/60 pt-2.5 mt-3 text-[9px] text-brand-xp font-black uppercase">
+                    <span>Explore Action</span>
+                    <span>+{rec.xpReward} XP</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
           {/* Daily Goals Checklist */}
           <div className="glass-panel p-5 rounded-3xl border border-brand-border bg-white dark:bg-zinc-900/10">
             <h3 className="text-sm font-black text-zinc-900 dark:text-white uppercase tracking-tight mb-4 flex items-center gap-2">
-              <CheckSquare size={16} className="text-brand-xp" /> Daily Goals Checklist
+              <CheckSquare size={16} className="text-brand-cyber" /> Daily Momentum Goals
             </h3>
             <div className="flex flex-col gap-3">
-              {goals.map(goal => (
+              {dailyGoals.map(goal => (
                 <div 
                   key={goal.id} 
-                  onClick={() => toggleGoal(goal.id)}
+                  onClick={() => toggleDailyGoal(goal.id)}
                   className="flex items-center gap-3 p-3 rounded-xl border border-brand-border bg-zinc-50/50 dark:bg-black/10 hover:bg-zinc-100 dark:hover:bg-black/25 cursor-pointer transition-colors"
                 >
                   {goal.done ? (
@@ -131,6 +148,9 @@ export default function HomePage() {
               ))}
             </div>
           </div>
+
+          {/* Resume Intelligence ATS reviewer */}
+          <ResumeIntelligence />
 
           {/* AI Match Recommendations preview */}
           <div className="glass-panel p-5 rounded-3xl border border-brand-border bg-white dark:bg-zinc-900/10">
@@ -163,7 +183,7 @@ export default function HomePage() {
                     </div>
                   </div>
                   <div className="flex items-center gap-2 text-right shrink-0">
-                    <span className="text-[10px] font-black text-brand-cyber">Match matched!</span>
+                    <span className="text-[10px] font-black text-brand-cyber">AI Recommendation</span>
                     <ChevronRight size={14} className="text-zinc-400" />
                   </div>
                 </div>
@@ -176,6 +196,61 @@ export default function HomePage() {
         {/* RIGHT COLUMN: Leaderboard & Ecosystem Feed */}
         <div className="flex flex-col gap-6">
           
+          {/* Interview Intelligence Widget */}
+          <div className="glass-panel p-5 rounded-3xl border border-brand-border bg-white dark:bg-zinc-900/10">
+            <h3 className="text-sm font-black text-zinc-900 dark:text-white uppercase tracking-tight mb-4 flex items-center gap-2">
+              <Zap size={15} className="text-brand-level" /> Interview Intelligence
+            </h3>
+            
+            <div className="flex flex-col gap-4 text-left">
+              <div className="flex items-center justify-between gap-3 bg-zinc-50 dark:bg-black/25 p-3 rounded-2xl border border-brand-border">
+                <div className="flex flex-col">
+                  <span className="text-[9px] uppercase font-bold text-zinc-500">Readiness Score</span>
+                  <span className="text-xl font-black text-brand-level mt-0.5">{interview.readinessScore}%</span>
+                </div>
+                <div className="flex flex-col text-right">
+                  <span className="text-[9px] uppercase font-bold text-zinc-500">Confidence</span>
+                  <span className="text-[10px] font-black uppercase text-brand-cyber mt-0.5">{interview.confidence}</span>
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-1.5 p-3 bg-brand-xp/5 rounded-2xl border border-brand-xp/10">
+                <span className="text-[9px] font-black uppercase text-brand-xp tracking-wider">Top Company Fit</span>
+                <span className="text-xs font-black text-zinc-800 dark:text-white leading-tight">{interview.companyFit}</span>
+                <p className="text-[10px] text-zinc-500 dark:text-zinc-400 font-medium leading-relaxed mt-0.5">{interview.fitReason}</p>
+              </div>
+
+              {interview.missingSkills.length > 0 && (
+                <div className="flex flex-col gap-1">
+                  <span className="text-[9px] font-black uppercase text-zinc-450 dark:text-zinc-400 tracking-wider">Missing core skills</span>
+                  <div className="flex flex-wrap gap-1.5 mt-1">
+                    {interview.missingSkills.map(skill => (
+                      <span key={skill} className="text-[8px] bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 px-1.5 py-0.5 rounded font-black uppercase">
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <div className="flex flex-col gap-2 border-t border-brand-border pt-3.5">
+                <span className="text-[9px] font-black uppercase text-zinc-450 dark:text-zinc-400 tracking-wider">Preparation Tips</span>
+                {interview.suggestions.map((sug, i) => (
+                  <div key={i} className="flex items-start gap-2 text-[10px] text-zinc-650 dark:text-zinc-300 font-medium leading-relaxed">
+                    <ShieldCheck size={12} className="text-brand-level shrink-0 mt-0.5" />
+                    <span>{sug}</span>
+                  </div>
+                ))}
+              </div>
+              <button
+                onClick={() => router.push('/resume-intelligence')}
+                className="w-full mt-2.5 py-2.5 rounded-xl border border-brand-border hover:bg-zinc-50 dark:hover:bg-white/5 text-[9px] font-black uppercase tracking-wider text-zinc-600 dark:text-zinc-300 transition-colors flex items-center justify-center gap-1.5"
+              >
+                Analyze Target Fits <ArrowRight size={11} />
+              </button>
+            </div>
+          </div>
+
           {/* Weekly Leaderboard mini preview */}
           <div className="glass-panel p-5 rounded-3xl border border-brand-border bg-white dark:bg-zinc-900/10">
             <div className="flex items-center justify-between pb-3 border-b border-brand-border mb-4">

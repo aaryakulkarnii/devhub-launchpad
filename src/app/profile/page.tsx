@@ -11,12 +11,13 @@ import { useUserState } from '../../context/UserStateContext';
 import RadarChart from '../../components/RadarChart';
 import DNAVisualizer from '../../components/DNAVisualizer';
 import HeatmapCalendar from '../../components/HeatmapCalendar';
+import { getBuilderSummary, getGrowthMetrics } from '../../lib/momentum-ai';
 
 export default function ProfilePage() {
   const router = useRouter();
   const { profile, completedMissionIds, isOnboarded } = useUserState();
 
-  const [activeTab, setActiveTab] = useState<'DNA' | 'Timeline' | 'Logs'>('DNA');
+  const [activeTab, setActiveTab] = useState<'DNA' | 'Timeline' | 'Logs' | 'Growth'>('DNA');
 
   // 1. Guard onboarding
   useEffect(() => {
@@ -59,7 +60,7 @@ export default function ProfilePage() {
         </div>
 
         {/* Identity Headings */}
-        <div className="text-center relative z-10">
+        <div className="text-center relative z-10 flex flex-col items-center">
           <h2 className="text-lg font-black text-zinc-900 dark:text-white tracking-tight">
             {profile.name}
           </h2>
@@ -69,6 +70,9 @@ export default function ProfilePage() {
           <span className="text-[9px] bg-zinc-100 dark:bg-white/5 border border-brand-border text-zinc-550 dark:text-zinc-400 px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider mt-2.5 inline-block">
             {profile.currentStage}
           </span>
+          <div className="mt-3.5 p-3 rounded-2xl bg-brand-level/5 border border-brand-level/10 text-[10px] text-zinc-700 dark:text-zinc-350 leading-relaxed font-semibold max-w-sm text-center relative z-10 shadow-glass">
+            ✨ <b>Momentum AI Summary:</b> {getBuilderSummary(profile)}
+          </div>
         </div>
 
         {/* XP Ledger Info */}
@@ -90,29 +94,51 @@ export default function ProfilePage() {
       </div>
 
       {/* 2. Community invite */}
-      <div className="glass-panel rounded-3xl border border-brand-border bg-white dark:bg-white/5 p-4 text-left relative z-10">
-        <div className="flex flex-col gap-3">
-          <div>
-            <p className="text-[10px] uppercase tracking-[0.3em] text-zinc-500 dark:text-zinc-450">Builder community</p>
-            <h2 className="text-base font-black text-zinc-900 dark:text-white mt-2">Join the DevHub builder community</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 relative z-10">
+        <div className="glass-panel rounded-3xl border border-brand-border bg-white dark:bg-white/5 p-4 text-left">
+          <div className="flex flex-col gap-3">
+            <div>
+              <p className="text-[10px] uppercase tracking-[0.3em] text-zinc-500 dark:text-zinc-400">Builder community</p>
+              <h2 className="text-base font-black text-zinc-900 dark:text-white mt-2">Join the DevHub builder community</h2>
+            </div>
+            <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">
+              Connect with other builders, discover hackathons, projects, and opportunities in one place.
+            </p>
+            <a
+              href="https://chat.whatsapp.com/FzBACCacUxiLciCcs0KlEz"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex w-fit rounded-2xl bg-brand-xp/10 border border-brand-xp/20 px-4 py-2 text-xs font-semibold text-brand-xp transition hover:bg-brand-xp/15"
+            >
+              Join community
+            </a>
           </div>
-          <p className="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">
-            Connect with other builders, discover hackathons, projects, and opportunities in one place.
-          </p>
-          <a
-            href="https://chat.whatsapp.com/FzBACCacUxiLciCcs0KlEz"
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex w-fit rounded-2xl bg-brand-xp/10 border border-brand-xp/20 px-4 py-3 text-sm font-semibold text-brand-xp transition hover:bg-brand-xp/15"
-          >
-            Join community
-          </a>
+        </div>
+
+        <div className="glass-panel rounded-3xl border border-brand-border bg-white dark:bg-white/5 p-4 text-left">
+          <div className="flex flex-col gap-3 justify-between h-full">
+            <div>
+              <div>
+                <p className="text-[10px] uppercase tracking-[0.3em] text-zinc-500 dark:text-zinc-400">AI Career System</p>
+                <h2 className="text-base font-black text-zinc-900 dark:text-white mt-2">Analyze ATS Resume Gaps</h2>
+              </div>
+              <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed mt-1">
+                Scan your PDF/DOC resume content to discover missing keywords, target startup fits, and custom growth projects.
+              </p>
+            </div>
+            <button
+              onClick={() => router.push('/resume-intelligence')}
+              className="inline-flex w-fit rounded-2xl bg-brand-cyber/10 border border-brand-cyber/20 px-4 py-2 text-xs font-semibold text-brand-cyber transition hover:bg-brand-cyber/15"
+            >
+              Open Resume Portal
+            </button>
+          </div>
         </div>
       </div>
 
       {/* 3. Horizontal navigation tab capsules */}
-      <div className="grid grid-cols-3 bg-zinc-100 dark:bg-black/45 border border-brand-border p-1 rounded-2xl relative z-10 select-none">
-        {(['DNA', 'Timeline', 'Logs'] as const).map((tab) => {
+      <div className="grid grid-cols-4 bg-zinc-100 dark:bg-black/45 border border-brand-border p-1 rounded-2xl relative z-10 select-none">
+        {(['DNA', 'Timeline', 'Logs', 'Growth'] as const).map((tab) => {
           const isSelected = activeTab === tab;
           return (
             <button
@@ -123,7 +149,7 @@ export default function ProfilePage() {
                   : 'text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-300 font-medium'
                 }`}
             >
-              {tab === 'DNA' ? 'DNA & Radar' : tab === 'Timeline' ? 'Timeline' : 'Build Logs'}
+              {tab === 'DNA' ? 'DNA & Radar' : tab === 'Timeline' ? 'Timeline' : tab === 'Logs' ? 'Build Logs' : 'AI Growth'}
             </button>
           );
         })}
@@ -247,6 +273,49 @@ export default function ProfilePage() {
                 </div>
               ))
             )}
+          </motion.div>
+        )}
+
+        {/* TAB D: AI GROWTH PROGRESSION */}
+        {activeTab === 'Growth' && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex flex-col gap-4 text-left"
+          >
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {getGrowthMetrics(profile).map((metric, i) => (
+                <div key={i} className="glass-panel p-4 rounded-2xl border border-brand-border bg-white dark:bg-zinc-900/10 flex flex-col gap-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] uppercase font-black text-zinc-450 dark:text-zinc-500 tracking-wider">
+                      {metric.name}
+                    </span>
+                    <span className={`text-[9px] font-black uppercase tracking-wide px-2 py-0.5 rounded ${
+                      metric.positive 
+                        ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' 
+                        : 'bg-zinc-150 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400'
+                    }`}>
+                      {metric.change}
+                    </span>
+                  </div>
+                  <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-300 mt-1">
+                    {metric.status}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            <div className="glass-panel rounded-3xl border border-brand-border bg-white dark:bg-black/35 p-4 mt-1">
+              <div className="flex items-center justify-between pb-2 border-b border-brand-border mb-3">
+                <h3 className="text-xs font-black text-zinc-900 dark:text-white uppercase tracking-wider">
+                  Consistency Heatmap
+                </h3>
+                <span className="text-[8px] bg-brand-cyber/15 text-brand-cyber px-2 py-0.5 rounded font-black uppercase">
+                  Adaptive Tracker
+                </span>
+              </div>
+              <HeatmapCalendar logs={profile.logs} streak={profile.currentStreak} />
+            </div>
           </motion.div>
         )}
 

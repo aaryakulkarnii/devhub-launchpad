@@ -4,7 +4,7 @@ import React, { ReactNode, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { 
-  RefreshCw, Terminal, Menu, X, Home, Hammer, Compass, Users, MessageSquare, Bell, Bookmark, Sun, Moon 
+  RefreshCw, Terminal, Menu, X, Home, Hammer, Compass, Users, MessageSquare, Bell, Bookmark 
 } from 'lucide-react';
 import { useUserState } from '../context/UserStateContext';
 import DesktopShell from './DesktopShell';
@@ -126,26 +126,7 @@ export default function MobileFrame({
                 })}
               </nav>
 
-              {/* Theme Switcher in Mobile Drawer */}
-              <button 
-                onClick={() => {
-                  toggleTheme();
-                  setIsDrawerOpen(false);
-                }}
-                className="flex items-center justify-between w-full px-3 py-2 rounded-xl border border-brand-border bg-zinc-50 dark:bg-zinc-900/10 hover:bg-zinc-100 dark:hover:bg-zinc-900/30 text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200 transition-all duration-150 text-[9px] font-black uppercase tracking-wider"
-              >
-                <span className="flex items-center gap-2">
-                  {theme === 'light' ? (
-                    <Sun size={13} className="text-amber-500" />
-                  ) : (
-                    <Moon size={13} className="text-brand-xp" />
-                  )}
-                  <span>{theme === 'light' ? 'Light' : 'Dark'}</span>
-                </span>
-                <span className="text-[7px] bg-zinc-200 dark:bg-white/5 border border-brand-border text-zinc-400 dark:text-zinc-650 px-1 rounded font-black">
-                  Theme
-                </span>
-              </button>
+
 
               {/* User profile footer */}
               {profile && (
