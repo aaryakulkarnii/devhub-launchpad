@@ -37,6 +37,38 @@ export default function HomePage() {
   // Determine starting/current daily mission for user
   const activeMission = missions.find(m => !completedMissionIds.includes(m.id)) || missions[0];
 
+  const hasStrongStreak = profile.currentStreak >= 7;
+  const isAIFocused = profile.focusArea.toLowerCase().includes('ai');
+  const hasOpenSourceFocus = profile.focusArea.toLowerCase().includes('web') || profile.focusArea.toLowerCase().includes('open source') || profile.focusArea.toLowerCase().includes('app');
+  const recentLogsCount = profile.logs.length;
+
+  const aiTips = [
+    {
+      id: 'ai-1',
+      title: hasStrongStreak ? 'You’ve been consistent for 7 days' : 'Keep the momentum going',
+      description: hasStrongStreak
+        ? 'Now deploy your first project and make your progress visible in a live portfolio.'
+        : 'Ship one more build log this week to strengthen your consistency streak.',
+      highlight: hasStrongStreak ? 'Deploy your first project' : 'Log today',
+    },
+    {
+      id: 'ai-2',
+      title: isAIFocused ? 'Your AI skills are improving' : 'Your core skills are growing',
+      description: isAIFocused
+        ? 'Try contributing to open source or building an AI event project to turn learning into proof-of-work.'
+        : 'A short open source contribution or hackathon entry will amplify your builder reputation.',
+      highlight: isAIFocused ? 'Join an AI event' : 'Contribute to open source',
+    },
+    {
+      id: 'ai-3',
+      title: recentLogsCount >= 2 ? 'Your portfolio is forming' : 'Build more proof-of-work',
+      description: recentLogsCount >= 2
+        ? 'Select a strong project and deploy it with a short case note to showcase growth.'
+        : 'Add one more shipped update to make your builder story feel concrete.',
+      highlight: recentLogsCount >= 2 ? 'Deploy a project' : 'Ship another log',
+    }
+  ];
+
   const handleLogSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!logContent.trim()) return;
@@ -90,7 +122,36 @@ export default function HomePage() {
         <MissionCard mission={activeMission} />
       </div>
 
-      {/* 3. BUILDER JOURNEY TIMELINE */}
+      {/* 3. AI BUILDER AGENT */}
+      <div className="glass-panel p-4 rounded-3xl border border-white/5 bg-zinc-950/70">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="text-[10px] uppercase font-bold tracking-widest text-zinc-500">
+              <Sparkles size={12} className="inline mr-1 text-brand-xp" /> AI Builder Agent
+            </p>
+            <h3 className="text-sm sm:text-base font-black text-white mt-1">
+              Smart next moves tailored to your current momentum.
+            </h3>
+          </div>
+          <span className="text-[10px] uppercase tracking-widest text-zinc-500 font-semibold">
+            {hasStrongStreak ? 'Momentum optimized' : 'Stay focused'}
+          </span>
+        </div>
+
+        <div className="mt-4 grid gap-3 sm:grid-cols-3">
+          {aiTips.map(tip => (
+            <div key={tip.id} className="rounded-3xl border border-white/10 bg-black/60 p-4 shadow-[0_12px_40px_rgba(0,0,0,0.4)]">
+              <p className="text-[11px] text-zinc-400 uppercase tracking-[0.25em] font-semibold mb-2">
+                {tip.highlight}
+              </p>
+              <h4 className="text-sm font-bold text-white mb-2">{tip.title}</h4>
+              <p className="text-[13px] leading-5 text-zinc-300">{tip.description}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* 4. BUILDER JOURNEY TIMELINE */}
       <div>
         <h3 className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-3 flex items-center gap-1.5 pl-1">
           <Award size={12} className="text-brand-level" /> Builder Journey
