@@ -3,6 +3,8 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { 
   BuilderProfile, Mission, Opportunity, FeedItem, BuildLog, BuilderDNA, RadarMetrics, TimelineMilestone,
+  Teammate, MomentumAISuggestion, MOCK_TEAMMATES,
+  LeaderboardUser, MOCK_LEADERBOARD,
   INITIAL_MISSIONS, INITIAL_FEED, SUGGESTED_OPPORTUNITIES, SYNTHETIC_NAMES, SYNTHETIC_LOGS 
 } from '../lib/dummy-data';
 import { supabase, isSupabaseConfigured } from '../lib/supabaseClient';
@@ -13,12 +15,25 @@ interface UserStateContextType {
   completedMissionIds: string[];
   opportunities: Opportunity[];
   feed: FeedItem[];
+  teammates: Teammate[];
+  aiSuggestions: MomentumAISuggestion[];
+  leaderboard: LeaderboardUser[];
+  theme: 'light' | 'dark';
+  toggleTheme: () => void;
   isOnboarded: boolean;
   justLeveledUp: boolean;
   xpEarnedAlert: number | null;
   setJustLeveledUp: (val: boolean) => void;
   setXpEarnedAlert: (val: number | null) => void;
-  onboardUser: (name: string, focusArea: string, stage: string, excites: string) => void;
+  onboardUser: (
+    name: string,
+    focusArea: string,
+    stage: string,
+    excites: string,
+    techStack: string[],
+    goals: string[],
+    interests: string[]
+  ) => void;
   postBuildLog: (content: string) => void;
   completeMission: (missionId: string) => void;
   applaudFeedItem: (id: string) => void;
@@ -32,11 +47,144 @@ export const UserStateProvider = ({ children }: { children: ReactNode }) => {
   const [profile, setProfile] = useState<BuilderProfile | null>(null);
   const [missions, setMissions] = useState<Mission[]>(INITIAL_MISSIONS);
   const [completedMissionIds, setCompletedMissionIds] = useState<string[]>([]);
+  const [teammates, setTeammates] = useState<Teammate[]>(MOCK_TEAMMATES);
+  const [aiSuggestions, setAiSuggestions] = useState<MomentumAISuggestion[]>([]);
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+
+  // Load and apply theme on client mount
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('devhub_theme') as 'light' | 'dark' | null;
+    const systemPrefersDark = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const activeTheme = savedTheme || (systemPrefersDark ? 'dark' : 'light');
+    setTheme(activeTheme);
+    if (activeTheme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, []);
+
+  const toggleTheme = () => {
+    const nextTheme = theme === 'light' ? 'dark' : 'light';
+    setTheme(nextTheme);
+    localStorage.setItem('devhub_theme', nextTheme);
+    if (nextTheme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  };
+
+  // Generate dynamic, competitive rankings combining mocks with active user stats
+  const getLeaderboardList = (): LeaderboardUser[] => {
+    if (!profile) return MOCK_LEADERBOARD;
+    
+    const userRole = profile.focusArea.replace(' Builder', '').replace(' Developer', '');
+    const userEntry: LeaderboardUser = {
+      rank: 0,
+      name: profile.name,
+      avatar: profile.photoUrl,
+      level: profile.level,
+      xp: profile.xp,
+      reputation: profile.reputation || 100,
+      streak: profile.currentStreak,
+      role: userRole
+    };
+    
+    const combined = [...MOCK_LEADERBOARD.filter(x => x.name.toLowerCase() !== profile.name.toLowerCase()), userEntry];
+    combined.sort((a, b) => b.xp - a.xp);
+    return combined.map((entry, idx) => ({
+      ...entry,
+      rank: idx + 1
+    }));
+  };
+
+  const leaderboard = getLeaderboardList();
+
+
+  useEffect(() => {
+    if (profile) {
+      const suggestions: MomentumAISuggestion[] = [];
+      const today = new Date().toDateString();
+      const todayLog = profile.logs.find(log => new Date(log.date).toDateString() === today);
+
+      if (!todayLog) {
+        suggestions.push({
+          id: 'sug-log',
+          title: 'Ship Today\'s Progress',
+          description: 'Post a daily build log to keep your streak multiplier active and claim XP.',
+          highlight: 'Streak Multiplier',
+          actionText: 'Post Build Log',
+          xpReward: 15
+        });
+      }
+
+      if (profile.focusArea.includes('AI')) {
+        suggestions.push({
+          id: 'sug-ai-1',
+          title: 'Integrate Gemini API',
+          description: 'Build a serverless Next.js endpoint processing unstructured prompt text.',
+          highlight: 'Skill Acquisition',
+          actionText: 'Start Mission',
+          xpReward: 50
+        });
+      } else {
+        suggestions.push({
+          id: 'sug-web-1',
+          title: 'Optimize Core Web Vitals',
+          description: 'Deploy to Vercel and optimize LCP/FID to secure perfect Lighthouse scoring.',
+          highlight: 'Vercel Deployment',
+          actionText: 'Start Mission',
+          xpReward: 50
+        });
+      }
+
+      if (profile.techStack && profile.techStack.includes('React')) {
+        suggestions.push({
+          id: 'sug-react',
+          title: 'Contribute to Lucide React',
+          description: 'Open a pull request mapping SVGs on the official icons library repo.',
+          highlight: 'Open Source',
+          actionText: 'Explore Moves',
+          xpReward: 80
+        });
+      }
+
+      if (profile.goals && profile.goals.includes('Get Internship')) {
+        suggestions.push({
+          id: 'sug-intern',
+          title: 'Optimize Builder Resume',
+          description: 'Add Vercel live URLs & Github proof of work items to get immediate shortlists.',
+          highlight: 'Career Readiness',
+          actionText: 'Optimize Resume',
+          xpReward: 100
+        });
+      }
+
+      // Default suggestions if list is sparse
+      if (suggestions.length < 3) {
+        suggestions.push({
+          id: 'sug-dsa',
+          title: 'Practice DSA Challenge',
+          description: 'Solve 2 array manipulation practice questions on Leetcode to level up coding.',
+          highlight: 'Interview Prep',
+          actionText: 'Practice DSA',
+          xpReward: 30
+        });
+      }
+
+      setAiSuggestions(suggestions.slice(0, 3));
+    } else {
+      setAiSuggestions([]);
+    }
+  }, [profile]);
+
   const [opportunities, setOpportunities] = useState<Opportunity[]>(SUGGESTED_OPPORTUNITIES);
   const [feed, setFeed] = useState<FeedItem[]>(INITIAL_FEED);
   const [isOnboarded, setIsOnboarded] = useState<boolean>(false);
   const [justLeveledUp, setJustLeveledUp] = useState<boolean>(false);
   const [xpEarnedAlert, setXpEarnedAlert] = useState<number | null>(null);
+
 
   // 1. Load data from LocalStorage/Supabase on mount
   useEffect(() => {
@@ -340,7 +488,15 @@ export const UserStateProvider = ({ children }: { children: ReactNode }) => {
   };
 
   // 4. Onboard Action
-  const onboardUser = async (name: string, focusArea: string, stage: string, excites: string) => {
+  const onboardUser = async (
+    name: string,
+    focusArea: string,
+    stage: string,
+    excites: string,
+    techStack: string[],
+    goals: string[],
+    interests: string[]
+  ) => {
     // Determine dynamic Title & Starter Mission
     let dynamicTitle = 'Level 1 Explorer';
     let startingRadar: RadarMetrics = { coding: 20, consistency: 10, community: 10, learning: 15, building: 15 };
@@ -413,7 +569,11 @@ export const UserStateProvider = ({ children }: { children: ReactNode }) => {
           description: `Unlocked dynamic starting identity: ${dynamicTitle}!`
         }
       ],
-      logs: []
+      logs: [],
+      techStack,
+      interests,
+      goals,
+      reputation: 100
     };
 
     if (isSupabaseConfigured && supabase) {
@@ -924,6 +1084,11 @@ export const UserStateProvider = ({ children }: { children: ReactNode }) => {
       completedMissionIds,
       opportunities,
       feed,
+      teammates,
+      aiSuggestions,
+      leaderboard,
+      theme,
+      toggleTheme,
       isOnboarded,
       justLeveledUp,
       xpEarnedAlert,

@@ -78,7 +78,85 @@ export interface BuilderProfile {
   dna: BuilderDNA;
   timeline: TimelineMilestone[];
   logs: BuildLog[];
+  techStack?: string[];
+  interests?: string[];
+  goals?: string[];
+  reputation?: number;
 }
+
+export interface Teammate {
+  id: string;
+  name: string;
+  avatar: string;
+  role: string;
+  skills: string[];
+  matchScore: number;
+  interests: string[];
+  status: 'Online' | 'Building' | 'Idle';
+}
+
+export interface MomentumAISuggestion {
+  id: string;
+  title: string;
+  description: string;
+  highlight: string;
+  actionText: string;
+  xpReward: number;
+}
+
+export const MOCK_TEAMMATES: Teammate[] = [
+  {
+    id: 't-1',
+    name: 'Aarav Gupta',
+    avatar: 'https://api.dicebear.com/7.x/pixel-art/svg?seed=Aarav',
+    role: 'AI Engineer',
+    skills: ['Python', 'Gemini API', 'PyTorch'],
+    matchScore: 98,
+    interests: ['Build Projects', 'Win Hackathons'],
+    status: 'Building'
+  },
+  {
+    id: 't-2',
+    name: 'Rohan Sharma',
+    avatar: 'https://api.dicebear.com/7.x/pixel-art/svg?seed=Rohan',
+    role: 'Frontend Architect',
+    skills: ['React', 'Next.js', 'Framer Motion'],
+    matchScore: 92,
+    interests: ['Build Projects', 'Learn New Skills'],
+    status: 'Online'
+  },
+  {
+    id: 't-3',
+    name: 'Ananya Iyer',
+    avatar: 'https://api.dicebear.com/7.x/pixel-art/svg?seed=Ananya',
+    role: 'Fullstack Dev',
+    skills: ['Node.js', 'PostgreSQL', 'Tailwind'],
+    matchScore: 88,
+    interests: ['Get Internship', 'Build Projects'],
+    status: 'Idle'
+  }
+];
+
+export interface LeaderboardUser {
+  rank: number;
+  name: string;
+  avatar: string;
+  level: number;
+  xp: number;
+  reputation: number;
+  streak: number;
+  role: string;
+}
+
+export const MOCK_LEADERBOARD: LeaderboardUser[] = [
+  { rank: 1, name: 'Aarav Gupta', avatar: 'https://api.dicebear.com/7.x/pixel-art/svg?seed=Aarav', level: 14, xp: 4850, reputation: 320, streak: 12, role: 'AI Engineer' },
+  { rank: 2, name: 'Ananya Iyer', avatar: 'https://api.dicebear.com/7.x/pixel-art/svg?seed=Ananya', level: 11, xp: 3200, reputation: 250, streak: 8, role: 'Fullstack Dev' },
+  { rank: 3, name: 'Rohan Sharma', avatar: 'https://api.dicebear.com/7.x/pixel-art/svg?seed=Rohan', level: 9, xp: 2450, reputation: 190, streak: 7, role: 'Frontend Architect' },
+  { rank: 4, name: 'Priya Patel', avatar: 'https://api.dicebear.com/7.x/pixel-art/svg?seed=Priya', level: 8, xp: 2100, reputation: 160, streak: 5, role: 'Mobile Dev' },
+  { rank: 5, name: 'Kabir Das', avatar: 'https://api.dicebear.com/7.x/pixel-art/svg?seed=Kabir', level: 6, xp: 1450, reputation: 110, streak: 3, role: 'Security Engineer' }
+];
+
+
 
 export const INITIAL_MISSIONS: Mission[] = [
   {

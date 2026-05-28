@@ -61,16 +61,14 @@ export default function MissionCard({ mission }: MissionCardProps) {
   const strokeDashoffset = circumference - (progressPercent / 100) * circumference;
 
   return (
-    <div className={`w-full glass-panel rounded-3xl p-5 relative overflow-hidden transition-all duration-300 ${
-      isCompleted 
-        ? 'border-brand-xp/30 bg-gradient-to-br from-brand-xp/5 via-[#12121a]/60 to-[#12121a]/60 shadow-[0_0_20px_rgba(0,255,204,0.06)]' 
+    <div className={`w-full glass-panel rounded-3xl p-5 relative overflow-hidden transition-all duration-300 ${isCompleted
+        ? 'border-brand-xp/30 bg-gradient-to-br from-brand-xp/5 via-[#12121a]/60 to-[#12121a]/60 shadow-[0_0_20px_rgba(0,255,204,0.06)]'
         : 'border-white/8 hover:border-white/12'
-    }`}>
-      
+      }`}>
+
       {/* Glow highlight */}
-      <div className={`absolute top-0 right-0 w-24 h-24 rounded-full blur-2xl opacity-10 pointer-events-none ${
-        isCompleted ? 'bg-brand-xp' : 'bg-brand-cyber'
-      }`} />
+      <div className={`absolute top-0 right-0 w-24 h-24 rounded-full blur-2xl opacity-10 pointer-events-none ${isCompleted ? 'bg-brand-xp' : 'bg-brand-cyber'
+        }`} />
 
       {/* Header Info */}
       <div className="flex items-start justify-between gap-3">
@@ -138,18 +136,16 @@ export default function MissionCard({ mission }: MissionCardProps) {
                 key={step.id}
                 onClick={() => toggleStep(step.id)}
                 disabled={isCompleted}
-                className={`w-full flex items-center justify-between text-left p-2.5 rounded-xl border transition-all duration-200 ${
-                  isChecked
+                className={`w-full flex items-center justify-between text-left p-2.5 rounded-xl border transition-all duration-200 ${isChecked
                     ? 'bg-white/5 border-white/8 text-zinc-400'
                     : 'bg-black/20 border-white/5 hover:bg-white/5 text-zinc-300'
-                }`}
+                  }`}
               >
                 <div className="flex items-center gap-3">
-                  <div className={`w-4 h-4 rounded-full flex items-center justify-center transition-colors duration-200 shrink-0 ${
-                    isChecked
+                  <div className={`w-4 h-4 rounded-full flex items-center justify-center transition-colors duration-200 shrink-0 ${isChecked
                       ? 'bg-brand-xp text-black'
                       : 'border border-white/20'
-                  }`}>
+                    }`}>
                     {isChecked && <CheckCircle2 size={12} className="stroke-[3px]" />}
                   </div>
                   <span className={`text-xs ${isChecked ? 'line-through text-zinc-500 font-medium' : 'font-semibold'}`}>

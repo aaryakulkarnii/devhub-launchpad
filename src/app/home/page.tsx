@@ -2,30 +2,29 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { 
-  Flame, Zap, Plus, X, 
-  Terminal, Sparkles, AlertCircle,
-  CheckCircle2, Compass, User, Award, Play
+  Flame, Zap, Trophy, ExternalLink, Calendar, Bell, Search, Award, CheckSquare, Square, ChevronRight, Users, Sparkles
 } from 'lucide-react';
 import { useUserState } from '../../context/UserStateContext';
-import MissionCard from '../../components/MissionCard';
-import HeatmapCalendar from '../../components/HeatmapCalendar';
+import { MOCK_LEADERBOARD } from '../../lib/dummy-data';
 
 export default function HomePage() {
   const router = useRouter();
   const { 
     profile, 
-    missions, 
-    completedMissionIds, 
-    postBuildLog, 
-    isOnboarded 
+    isOnboarded,
+    opportunities,
   } = useUserState();
 
-  const [isLogOpen, setIsLogOpen] = useState(false);
-  const [logContent, setLogContent] = useState('');
+  const [goals, setGoals] = useState([
+    { id: 1, text: 'Complete Daily DSA challenge (+50 XP)', done: false },
+    { id: 2, text: 'Log a build updates log (+15 XP)', done: true },
+    { id: 3, text: 'Connect with a matched builder (+10 XP)', done: false },
+    { id: 4, text: 'Review new internship matches (+5 XP)', done: false }
+  ]);
 
-  // 1. Guard onboarding
+  // Guard onboarding
   useEffect(() => {
     if (!isOnboarded || !profile) {
       router.push('/');
@@ -34,302 +33,190 @@ export default function HomePage() {
 
   if (!profile) return null;
 
-  // Determine starting/current daily mission for user
-  const activeMission = missions.find(m => !completedMissionIds.includes(m.id)) || missions[0];
-
-  const hasStrongStreak = profile.currentStreak >= 7;
-  const isAIFocused = profile.focusArea.toLowerCase().includes('ai');
-  const hasOpenSourceFocus = profile.focusArea.toLowerCase().includes('web') || profile.focusArea.toLowerCase().includes('open source') || profile.focusArea.toLowerCase().includes('app');
-  const recentLogsCount = profile.logs.length;
-
-  const aiTips = [
-    {
-      id: 'ai-1',
-      title: hasStrongStreak ? 'You’ve been consistent for 7 days' : 'Keep the momentum going',
-      description: hasStrongStreak
-        ? 'Now deploy your first project and make your progress visible in a live portfolio.'
-        : 'Ship one more build log this week to strengthen your consistency streak.',
-      highlight: hasStrongStreak ? 'Deploy your first project' : 'Log today',
-    },
-    {
-      id: 'ai-2',
-      title: isAIFocused ? 'Your AI skills are improving' : 'Your core skills are growing',
-      description: isAIFocused
-        ? 'Try contributing to open source or building an AI event project to turn learning into proof-of-work.'
-        : 'A short open source contribution or hackathon entry will amplify your builder reputation.',
-      highlight: isAIFocused ? 'Join an AI event' : 'Contribute to open source',
-    },
-    {
-      id: 'ai-3',
-      title: recentLogsCount >= 2 ? 'Your portfolio is forming' : 'Build more proof-of-work',
-      description: recentLogsCount >= 2
-        ? 'Select a strong project and deploy it with a short case note to showcase growth.'
-        : 'Add one more shipped update to make your builder story feel concrete.',
-      highlight: recentLogsCount >= 2 ? 'Deploy a project' : 'Ship another log',
-    }
-  ];
-
-  const handleLogSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!logContent.trim()) return;
-
-    postBuildLog(logContent.trim());
-    setLogContent('');
-    setIsLogOpen(false);
+  const toggleGoal = (id: number) => {
+    setGoals(goals.map(g => g.id === id ? { ...g, done: !g.done } : g));
   };
 
-  // Quick autofill suggestions for high speed logging
-  const suggestions = [
-    'Solved 2 Leetcode problems on Strings 💻',
-    'Built beautiful glassmorphic navbar with Framer Motion 💎',
-    'Learned SQL joins & indexed table schema 📊',
-    'Deployed mobile responsive app layout on Vercel 🚀'
-  ];
-
-  // Dynamic Builder Journey statuses
-  const journeySteps = [
-    { label: 'Joined DevHub', done: true },
-    { label: 'Created Builder Profile', done: true },
-    { label: 'Complete First Mission', done: completedMissionIds.length > 0 },
-    { label: 'Reach Level 3', done: profile.level >= 3 },
-    { label: 'Deploy Project', done: completedMissionIds.includes('m2') || profile.logs.length >= 1 }
+  // Mock Activity summary for other builders
+  const recentActivity = [
+    { name: 'Rohan Sharma', text: 'shipped "Build Timeline" component', time: '5m ago', icon: '🚀' },
+    { name: 'Ananya Sharma', text: 'solved "3-Sum" coding challenge', time: '12m ago', icon: '🏆' },
+    { name: 'Vivek Singh', text: 'joined Razerpay Labs hackathon team', time: '1h ago', icon: '⚡' }
   ];
 
   return (
-    <div className="flex-1 flex flex-col px-4 py-5 select-none relative z-10 gap-6 pb-20 text-left">
+    <div className="flex-1 flex flex-col px-1 py-1 gap-6 pb-20 text-left w-full transition-all duration-300">
       
-      {/* 1. WELCOME SECTION */}
-      <div className="flex flex-col gap-1.5 bg-gradient-to-b from-white/5 to-transparent p-4 rounded-3xl border border-white/5 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-24 h-24 bg-brand-xp/10 rounded-full blur-2xl pointer-events-none" />
-        <span className="text-[9px] bg-brand-xp/10 text-brand-xp border border-brand-xp/25 px-2 py-0.5 rounded-full font-bold uppercase tracking-widest self-start">
-          Builder Space
-        </span>
-        <h2 className="text-xl font-black text-white tracking-tight mt-2.5">
-          Welcome back, {profile.name}
-        </h2>
-        <div className="flex items-center gap-2 text-xs text-zinc-400 font-semibold mt-1">
-          <span className="text-brand-cyber font-bold">{profile.builderTitle}</span>
-          <span>•</span>
-          <span className="text-brand-level font-black">Level {profile.level}</span>
+      {/* GREETING STATUS */}
+
+      {/* GREETING STATUS */}
+      <div className="flex items-center justify-between mt-2">
+        <div className="flex flex-col text-left">
+          <h1 className="text-xl sm:text-2xl font-black text-zinc-900 dark:text-white tracking-tight flex items-center gap-2">
+            Welcome back, {profile.name}! 👋
+          </h1>
+          <p className="text-xs text-zinc-500 dark:text-zinc-400 font-semibold mt-1">
+            Here is your builder workspace overview for today.
+          </p>
+        </div>
+
+        {/* Streak floating */}
+        <div className="flex items-center gap-2 bg-zinc-100/50 dark:bg-zinc-900/30 border border-brand-border px-3.5 py-1.5 rounded-2xl shadow-glass font-extrabold text-xs text-brand-streak animate-bounce">
+          <Flame size={14} className="fill-current animate-pulse" />
+          <span>{profile.currentStreak} Day Streak</span>
         </div>
       </div>
 
-      {/* 2. TODAY'S MISSION */}
-      <div>
-        <h3 className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-3 flex items-center gap-1.5 pl-1">
-          <Terminal size={12} className="text-brand-cyber" /> Today&apos;s Challenger Mission
-        </h3>
-        <MissionCard mission={activeMission} />
-      </div>
-
-      {/* 3. AI BUILDER AGENT */}
-      <div className="glass-panel p-4 rounded-3xl border border-white/5 bg-zinc-950/70">
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <p className="text-[10px] uppercase font-bold tracking-widest text-zinc-500">
-              <Sparkles size={12} className="inline mr-1 text-brand-xp" /> AI Builder Agent
-            </p>
-            <h3 className="text-sm sm:text-base font-black text-white mt-1">
-              Smart next moves tailored to your current momentum.
-            </h3>
-          </div>
-          <span className="text-[10px] uppercase tracking-widest text-zinc-500 font-semibold">
-            {hasStrongStreak ? 'Momentum optimized' : 'Stay focused'}
-          </span>
+      {/* QUICK STATS ROW */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-2">
+        <div className="glass-panel p-4 rounded-2xl border border-brand-border bg-white dark:bg-zinc-900/10 flex flex-col gap-1">
+          <span className="text-[9px] text-zinc-450 dark:text-zinc-500 font-black uppercase tracking-wider">Level</span>
+          <span className="text-xl font-black text-zinc-850 dark:text-white mt-1">{profile.level}</span>
         </div>
-
-        <div className="mt-4 grid gap-3 sm:grid-cols-3">
-          {aiTips.map(tip => (
-            <div key={tip.id} className="rounded-3xl border border-white/10 bg-black/60 p-4 shadow-[0_12px_40px_rgba(0,0,0,0.4)]">
-              <p className="text-[11px] text-zinc-400 uppercase tracking-[0.25em] font-semibold mb-2">
-                {tip.highlight}
-              </p>
-              <h4 className="text-sm font-bold text-white mb-2">{tip.title}</h4>
-              <p className="text-[13px] leading-5 text-zinc-300">{tip.description}</p>
-            </div>
-          ))}
+        <div className="glass-panel p-4 rounded-2xl border border-brand-border bg-white dark:bg-zinc-900/10 flex flex-col gap-1">
+          <span className="text-[9px] text-zinc-450 dark:text-zinc-500 font-black uppercase tracking-wider">Total Experience</span>
+          <span className="text-xl font-black text-brand-xp mt-1">{profile.xp} XP</span>
+        </div>
+        <div className="glass-panel p-4 rounded-2xl border border-brand-border bg-white dark:bg-zinc-900/10 flex flex-col gap-1">
+          <span className="text-[9px] text-zinc-450 dark:text-zinc-500 font-black uppercase tracking-wider">Problems Solved</span>
+          <span className="text-xl font-black text-brand-cyber mt-1">37</span>
+        </div>
+        <div className="glass-panel p-4 rounded-2xl border border-brand-border bg-white dark:bg-zinc-900/10 flex flex-col gap-1">
+          <span className="text-[9px] text-zinc-450 dark:text-zinc-500 font-black uppercase tracking-wider">Projects Shipped</span>
+          <span className="text-xl font-black text-brand-level mt-1">4</span>
         </div>
       </div>
 
-      {/* 4. BUILDER JOURNEY TIMELINE */}
-      <div>
-        <h3 className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-3 flex items-center gap-1.5 pl-1">
-          <Award size={12} className="text-brand-level" /> Builder Journey
-        </h3>
-        <div className="glass-panel p-4 rounded-3xl border border-white/5 flex flex-col gap-4">
-          <div className="relative pl-6 flex flex-col gap-4 border-l border-dashed border-zinc-700/60">
-            {journeySteps.map((step, idx) => (
-              <div key={idx} className="relative flex items-center gap-3">
-                <span className={`absolute -left-[29.5px] w-4 h-4 rounded-full flex items-center justify-center border bg-[#08080c] transition-all duration-300 ${
-                  step.done 
-                    ? 'border-brand-xp text-brand-xp shadow-[0_0_8px_rgba(0,255,204,0.3)]' 
-                    : 'border-zinc-700 text-zinc-600'
-                }`}>
-                  {step.done ? (
-                    <CheckCircle2 size={10} className="stroke-[3px]" />
-                  ) : (
-                    <span className="w-1.5 h-1.5 rounded-full bg-zinc-700" />
-                  )}
-                </span>
-                <span className={`text-xs font-semibold ${step.done ? 'text-zinc-200' : 'text-zinc-500'}`}>
-                  {step.label}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* 4. BUILDER CONSISTENCY */}
-      <div>
-        <HeatmapCalendar logs={profile.logs} streak={profile.currentStreak} />
-      </div>
-
-      {/* 5. PROGRESS OVERVIEW GRID */}
-      <div>
-        <h3 className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-3 flex items-center gap-1.5 pl-1">
-          <Sparkles size={12} className="text-brand-xp" /> Progress Overview
-        </h3>
-        <div className="grid grid-cols-2 gap-3">
-          <div className="glass-panel p-3.5 rounded-2xl border border-white/5 flex flex-col gap-1">
-            <span className="text-[8px] uppercase font-bold text-zinc-500 tracking-wider">Current Level</span>
-            <span className="text-base font-black text-white">LVL {profile.level}</span>
-          </div>
-          <div className="glass-panel p-3.5 rounded-2xl border border-white/5 flex flex-col gap-1">
-            <span className="text-[8px] uppercase font-bold text-zinc-500 tracking-wider">Total XP</span>
-            <span className="text-base font-black text-brand-xp">{profile.xp} XP</span>
-          </div>
-          <div className="glass-panel p-3.5 rounded-2xl border border-white/5 flex flex-col gap-1">
-            <span className="text-[8px] uppercase font-bold text-zinc-500 tracking-wider">Current Streak</span>
-            <span className="text-base font-black text-brand-streak">🔥 {profile.currentStreak} Days</span>
-          </div>
-          <div className="glass-panel p-3.5 rounded-2xl border border-white/5 flex flex-col gap-1">
-            <span className="text-[8px] uppercase font-bold text-zinc-500 tracking-wider">Projects Completed</span>
-            <span className="text-base font-black text-brand-cyber">{profile.logs.length} Updates</span>
-          </div>
-        </div>
-      </div>
-
-      {/* 5. QUICK ACTIONS */}
-      <div>
-        <h3 className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-3 flex items-center gap-1.5 pl-1">
-          <Zap size={12} className="text-yellow-400 animate-pulse" /> Quick Actions
-        </h3>
-        <div className="flex flex-col gap-2">
+      {/* MAIN TWO-COLUMN DASHBOARD CONTENT */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        {/* LEFT COLUMN: Goals & AI Recommendations */}
+        <div className="lg:col-span-2 flex flex-col gap-6">
           
-          <button
-            onClick={() => setIsLogOpen(true)}
-            className="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-brand-xp via-emerald-400 to-brand-cyber text-black hover:shadow-[0_0_20px_rgba(0,255,204,0.3)] active:scale-98 text-xs font-black uppercase tracking-widest flex items-center justify-center gap-2 transition-all duration-300"
-          >
-            <Plus size={16} className="stroke-[3px]" /> Add Build Log
-          </button>
+          {/* Daily Goals Checklist */}
+          <div className="glass-panel p-5 rounded-3xl border border-brand-border bg-white dark:bg-zinc-900/10">
+            <h3 className="text-sm font-black text-zinc-900 dark:text-white uppercase tracking-tight mb-4 flex items-center gap-2">
+              <CheckSquare size={16} className="text-brand-xp" /> Daily Goals Checklist
+            </h3>
+            <div className="flex flex-col gap-3">
+              {goals.map(goal => (
+                <div 
+                  key={goal.id} 
+                  onClick={() => toggleGoal(goal.id)}
+                  className="flex items-center gap-3 p-3 rounded-xl border border-brand-border bg-zinc-50/50 dark:bg-black/10 hover:bg-zinc-100 dark:hover:bg-black/25 cursor-pointer transition-colors"
+                >
+                  {goal.done ? (
+                    <Trophy size={16} className="text-amber-500 shrink-0" />
+                  ) : (
+                    <Square size={16} className="text-zinc-400 shrink-0" />
+                  )}
+                  <span className={`text-xs font-semibold ${goal.done ? 'line-through text-zinc-400 dark:text-zinc-650' : 'text-zinc-700 dark:text-zinc-300'}`}>
+                    {goal.text}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
 
-          <div className="grid grid-cols-2 gap-2">
-            <button
-              onClick={() => router.push('/profile')}
-              className="py-3 rounded-xl border border-white/8 hover:bg-white/5 text-white text-[10px] font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-colors duration-150"
-            >
-              <User size={12} /> View Profile
-            </button>
-            <button
-              onClick={() => router.push('/opportunities')}
-              className="py-3 rounded-xl border border-white/8 hover:bg-white/5 text-white text-[10px] font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-colors duration-150"
-            >
-              <Compass size={12} /> Explore moves
-            </button>
+          {/* AI Match Recommendations preview */}
+          <div className="glass-panel p-5 rounded-3xl border border-brand-border bg-white dark:bg-zinc-900/10">
+            <div className="flex items-center justify-between pb-3 border-b border-brand-border mb-4">
+              <h3 className="text-sm font-black text-zinc-900 dark:text-white uppercase tracking-tight flex items-center gap-2">
+                <Sparkles size={15} className="text-brand-cyber animate-pulse" /> AI Matches For You
+              </h3>
+              <button 
+                onClick={() => router.push('/opportunities')}
+                className="text-[9px] font-black text-brand-xp uppercase tracking-wider hover:opacity-85"
+              >
+                View matches
+              </button>
+            </div>
+
+            <div className="flex flex-col gap-3">
+              {opportunities.slice(0, 2).map((opp) => (
+                <div key={opp.id} className="flex items-center justify-between gap-3 p-3.5 rounded-2xl border border-brand-border bg-zinc-50 dark:bg-black/35 shadow-glass">
+                  <div className="flex flex-col gap-1 text-left">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-black text-zinc-800 dark:text-white leading-tight">{opp.title}</span>
+                      <span className="text-[8px] uppercase font-bold text-zinc-450 dark:text-zinc-500 tracking-wider">by {opp.organizer}</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 mt-1">
+                      {opp.tags.slice(0, 3).map(tag => (
+                        <span key={tag} className="text-[9px] bg-zinc-150 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400 px-1.5 py-0.5 rounded font-semibold">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 text-right shrink-0">
+                    <span className="text-[10px] font-black text-brand-cyber">Match matched!</span>
+                    <ChevronRight size={14} className="text-zinc-400" />
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
 
         </div>
-      </div>
 
-      {/* SLIDE-UP BUILD LOG INPUT DRAWER */}
-      <AnimatePresence>
-        {isLogOpen && (
-          <div className="absolute inset-0 z-50 select-none">
-            {/* Backdrop */}
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.6 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setIsLogOpen(false)}
-              className="absolute inset-0 bg-black"
-            />
-
-            {/* Glass Drawer */}
-            <motion.div
-              initial={{ y: '100%' }}
-              animate={{ y: 0 }}
-              exit={{ y: '100%' }}
-              transition={{ type: 'spring', damping: 28, stiffness: 260 }}
-              className="absolute bottom-0 left-0 right-0 max-h-[90%] rounded-t-[35px] border-t border-white/15 bg-zinc-950/95 shadow-[0_-20px_60px_rgba(0,0,0,0.55)] p-6 flex flex-col gap-4 z-50 sm:rounded-b-[40px]"
-            >
-              <div className="flex items-center justify-between pb-2 border-b border-white/5">
-                <div className="flex items-center gap-2">
-                  <div className="w-5 h-5 rounded-md bg-brand-xp/10 border border-brand-xp/20 flex items-center justify-center text-brand-xp">
-                    <Flame size={12} className="fill-brand-xp" />
+        {/* RIGHT COLUMN: Leaderboard & Ecosystem Feed */}
+        <div className="flex flex-col gap-6">
+          
+          {/* Weekly Leaderboard mini preview */}
+          <div className="glass-panel p-5 rounded-3xl border border-brand-border bg-white dark:bg-zinc-900/10">
+            <div className="flex items-center justify-between pb-3 border-b border-brand-border mb-4">
+              <h3 className="text-sm font-black text-zinc-900 dark:text-white uppercase tracking-tight flex items-center gap-2">
+                <Award size={15} className="text-brand-level" /> Top Builders This Week
+              </h3>
+              <button 
+                onClick={() => router.push('/people')}
+                className="text-[9px] font-black text-brand-xp uppercase tracking-wider hover:opacity-85"
+              >
+                View board
+              </button>
+            </div>
+            
+            <div className="flex flex-col gap-3">
+              {MOCK_LEADERBOARD.slice(0, 3).map((u, i) => (
+                <div key={u.name} className="flex items-center justify-between p-2.5 rounded-xl bg-zinc-50 dark:bg-black/20 border border-brand-border">
+                  <div className="flex items-center gap-2.5">
+                    <span className="text-xs font-black font-mono text-zinc-400">#{i + 1}</span>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={u.avatar} alt="avatar" className="w-6 h-6 rounded-full border border-brand-border bg-zinc-100" />
+                    <div className="flex flex-col text-left">
+                      <span className="text-xs font-black text-zinc-800 dark:text-white">{u.name}</span>
+                      <span className="text-[9px] text-zinc-450 dark:text-zinc-500 font-bold">{u.xp} XP</span>
+                    </div>
                   </div>
-                  <h3 className="text-sm font-black text-white uppercase tracking-tight">
-                    Add Today&apos;s Build Log
-                  </h3>
+                  <span className="text-[10px] text-brand-streak font-black">🔥 {u.streak}d</span>
                 </div>
-                <button 
-                  onClick={() => setIsLogOpen(false)}
-                  className="w-7 h-7 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-zinc-400 hover:text-white"
-                >
-                  <X size={14} />
-                </button>
-              </div>
-
-              <form onSubmit={handleLogSubmit} className="flex flex-col gap-4">
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-[10px] uppercase font-bold tracking-widest text-zinc-500">
-                    What did you build/ship today?
-                  </label>
-                  <textarea
-                    rows={4}
-                    value={logContent}
-                    onChange={(e) => setLogContent(e.target.value)}
-                    placeholder="e.g. Solved 2 Leetcode problems, built glassmorphic cards, worked on database integrations..."
-                    maxLength={150}
-                    required
-                    className="w-full bg-black/45 border border-white/8 rounded-2xl p-4 text-xs text-white font-semibold placeholder-zinc-600 focus:outline-none focus:border-brand-xp focus:shadow-[0_0_12px_rgba(0,255,204,0.15)] transition-all duration-200 resize-none text-left"
-                  />
-                  <div className="text-right text-[9px] text-zinc-600 font-bold uppercase">
-                    {logContent.length}/150 Characters
-                  </div>
-                </div>
-
-                <div className="flex flex-col gap-2">
-                  <span className="text-[9px] uppercase font-bold tracking-widest text-zinc-500 flex items-center gap-1">
-                    <AlertCircle size={10} /> Quick autofill examples
-                  </span>
-                  <div className="flex flex-col gap-1.5">
-                    {suggestions.map((s, idx) => (
-                      <button
-                        key={idx}
-                        type="button"
-                        onClick={() => setLogContent(s)}
-                        className="w-full text-left p-2 rounded-xl bg-white/5 border border-white/5 hover:border-white/8 text-[10px] font-semibold text-zinc-400 hover:text-white transition-colors duration-150"
-                      >
-                        {s}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={!logContent.trim()}
-                  className="w-full py-3 px-4 rounded-xl bg-brand-xp text-black disabled:opacity-40 disabled:pointer-events-none active:scale-95 text-xs font-black uppercase tracking-wider shadow-[0_4px_15px_rgba(0,255,204,0.2)] hover:shadow-[0_4px_20px_rgba(0,255,204,0.4)] transition-all duration-200 flex items-center justify-center gap-1.5"
-                >
-                  Post Log & Gain XP (+15 XP) <Sparkles size={13} className="fill-black" />
-                </button>
-              </form>
-
-            </motion.div>
+              ))}
+            </div>
           </div>
-        )}
-      </AnimatePresence>
+
+          {/* Activity Feed summary */}
+          <div className="glass-panel p-5 rounded-3xl border border-brand-border bg-white dark:bg-zinc-900/10">
+            <h3 className="text-sm font-black text-zinc-900 dark:text-white uppercase tracking-tight mb-4 flex items-center gap-2">
+              <Users size={15} className="text-zinc-500" /> Ecosystem Activity
+            </h3>
+            <div className="flex flex-col gap-3.5">
+              {recentActivity.map((act, i) => (
+                <div key={i} className="flex items-start gap-2.5 text-left text-xs">
+                  <span className="text-sm select-none">{act.icon}</span>
+                  <div className="flex flex-col">
+                    <p className="text-[11px] text-zinc-700 dark:text-zinc-300 font-semibold leading-snug">
+                      <span className="font-black text-zinc-900 dark:text-white">{act.name}</span> {act.text}
+                    </p>
+                    <span className="text-[8px] text-zinc-450 dark:text-zinc-550 font-bold mt-0.5">{act.time}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+        </div>
+
+      </div>
 
     </div>
   );
