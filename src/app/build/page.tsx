@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { 
-  Hammer, Terminal, Plus, GitCommit, GitPullRequest, GitBranch, ArrowRight, ShieldCheck, Flame
+  Hammer, Terminal, Plus
 } from 'lucide-react';
 import { useUserState } from '../../context/UserStateContext';
 import HeatmapCalendar from '../../components/HeatmapCalendar';
@@ -31,12 +31,6 @@ export default function BuildPage() {
     postBuildLog(logInput.trim());
     setLogInput('');
   };
-
-  const mockCommits = [
-    { id: 'c1', msg: 'refactor: decouple page grids into modular routes', branch: 'main', hash: 'fe48d9a', time: '12m ago' },
-    { id: 'c2', msg: 'feat: add Slack-style Messages room workspace', branch: 'main', hash: 'cb98a72', time: '1h ago' },
-    { id: 'c3', msg: 'fix: align button typography to Stone light mode theme', branch: 'dev', hash: 'e018a38', time: '3h ago' }
-  ];
 
   const sprints = [
     { id: 's1', title: 'Route Decoupling Sprint', status: 'In Progress', progress: 75, due: 'May 30' },
@@ -149,7 +143,7 @@ export default function BuildPage() {
 
         </div>
 
-        {/* Right Single-Column: Shipping stats, Git & Deploy updates */}
+        {/* Right Single-Column: Shipping stats */}
         <div className="flex flex-col gap-6">
           
           {/* Consistency calendar panel */}
@@ -158,49 +152,6 @@ export default function BuildPage() {
               Shipping Consistency
             </h3>
             <HeatmapCalendar logs={profile.logs} streak={profile.currentStreak} />
-          </div>
-
-          {/* GitHub Sync Commits */}
-          <div className="glass-panel p-4 rounded-3xl border border-brand-border bg-white dark:bg-zinc-900/10 flex flex-col gap-3">
-            <div className="flex items-center justify-between pb-2 border-b border-brand-border">
-              <h3 className="text-xs font-black text-zinc-900 dark:text-white uppercase tracking-wider flex items-center gap-1.5">
-                <GitCommit size={14} className="text-brand-cyber" /> Recent Git Commits
-              </h3>
-              <span className="text-[8px] bg-brand-cyber/10 text-brand-cyber px-2 py-0.5 rounded font-black uppercase tracking-wider border border-brand-cyber/20">Synced</span>
-            </div>
-
-            <div className="flex flex-col gap-3">
-              {mockCommits.map(c => (
-                <div key={c.id} className="flex flex-col gap-1 text-xs">
-                  <p className="text-[11px] text-zinc-700 dark:text-zinc-300 font-semibold leading-normal font-mono">{c.msg}</p>
-                  <div className="flex items-center justify-between text-[9px] text-zinc-450 dark:text-zinc-550 mt-0.5">
-                    <span className="font-semibold flex items-center gap-1"><GitBranch size={9} /> {c.branch} @ <b>{c.hash}</b></span>
-                    <span>{c.time}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Deployment Status indicator */}
-          <div className="glass-panel p-4 rounded-3xl border border-brand-border bg-white dark:bg-zinc-900/10 flex flex-col gap-3">
-            <h3 className="text-xs font-black text-zinc-900 dark:text-white uppercase tracking-wider">
-              Deployment Environment
-            </h3>
-            <div className="flex items-center justify-between p-3 rounded-xl bg-emerald-500/5 dark:bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400">
-              <div className="flex items-center gap-2">
-                <ShieldCheck size={16} />
-                <span className="text-xs font-black uppercase tracking-wider">Production Live</span>
-              </div>
-              <a 
-                href="https://vercel.com" 
-                target="_blank" 
-                rel="noreferrer" 
-                className="text-[9px] font-black uppercase tracking-wider flex items-center gap-1 text-emerald-500 hover:text-emerald-700"
-              >
-                Vercel <ArrowRight size={10} />
-              </a>
-            </div>
           </div>
 
         </div>

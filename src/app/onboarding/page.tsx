@@ -154,10 +154,10 @@ export default function OnboardingPage() {
                 <span className="text-[9px] bg-brand-xp/10 text-brand-xp border border-brand-xp/25 px-2.5 py-0.5 rounded-full font-bold uppercase tracking-widest">
                   Step 1 of 3: Core Identity
                 </span>
-                <h1 className="text-2xl font-black text-white tracking-tight mt-3">
+                <h1 className="text-2xl font-black text-zinc-900 dark:text-white tracking-tight mt-3">
                   Let&apos;s map your builder foundation
                 </h1>
-                <p className="text-xs text-zinc-400 mt-1 font-medium leading-relaxed">
+                <p className="text-xs text-zinc-550 dark:text-zinc-400 mt-1 font-medium leading-relaxed">
                   Every metric, skill radar, and daily suggestion calibrates around this.
                 </p>
               </div>
@@ -171,7 +171,7 @@ export default function OnboardingPage() {
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Enter your name (e.g., Aarya)"
                   maxLength={18}
-                  className="w-full bg-zinc-900/30 border border-white/5 hover:border-white/10 rounded-2xl px-4 py-3.5 text-sm text-white font-semibold placeholder-zinc-600 focus:outline-none focus:border-brand-xp focus:shadow-[0_0_12px_rgba(0,255,204,0.15)] transition-all duration-200"
+                  className="w-full bg-zinc-100/50 dark:bg-zinc-900/30 border border-brand-border rounded-2xl px-4 py-3.5 text-sm text-zinc-900 dark:text-white font-semibold placeholder-zinc-400 dark:placeholder-zinc-600 focus:outline-none focus:border-brand-xp focus:shadow-[0_0_12px_rgba(37,99,235,0.15)] transition-all duration-200"
                 />
               </div>
 
@@ -188,14 +188,14 @@ export default function OnboardingPage() {
                         onClick={() => setStage(opt.id)}
                         className={`glass-panel p-3.5 rounded-2xl border text-left flex flex-col gap-1 transition-all duration-200 ${
                           isSelected
-                            ? 'border-brand-xp bg-brand-xp/5 shadow-[0_0_15px_rgba(0,255,204,0.1)]'
-                            : 'border-white/5 hover:border-white/10 bg-zinc-950/30'
+                            ? 'border-brand-xp bg-brand-xp/5 shadow-[0_0_15px_rgba(37,99,235,0.1)]'
+                            : 'border-brand-border hover:border-zinc-200 dark:hover:border-white/10 bg-white/50 dark:bg-zinc-950/30'
                         }`}
                       >
-                        <span className={`text-xs font-black ${isSelected ? 'text-brand-xp' : 'text-white'}`}>
+                        <span className={`text-xs font-black ${isSelected ? 'text-brand-xp' : 'text-zinc-800 dark:text-white'}`}>
                           {opt.label}
                         </span>
-                        <span className="text-[10px] text-zinc-500 font-bold leading-normal">
+                        <span className="text-[10px] text-zinc-500 dark:text-zinc-400 font-bold leading-normal">
                           {opt.desc}
                         </span>
                       </button>
@@ -228,10 +228,10 @@ export default function OnboardingPage() {
                 <span className="text-[9px] bg-brand-cyber/10 text-brand-cyber border border-brand-cyber/25 px-2.5 py-0.5 rounded-full font-bold uppercase tracking-widest">
                   Step 2 of 3: Focus & Skills
                 </span>
-                <h1 className="text-2xl font-black text-white tracking-tight mt-3">
+                <h1 className="text-2xl font-black text-zinc-900 dark:text-white tracking-tight mt-3">
                   Align your tech stack
                 </h1>
-                <p className="text-xs text-zinc-400 mt-1 font-medium leading-relaxed">
+                <p className="text-xs text-zinc-550 dark:text-zinc-400 mt-1 font-medium leading-relaxed">
                   Choose a primary focus domain and the languages/frameworks you build with.
                 </p>
               </div>
@@ -249,15 +249,15 @@ export default function OnboardingPage() {
                         onClick={() => setFocusArea(card.id)}
                         className={`glass-panel p-3.5 rounded-2xl border text-left flex items-center justify-between transition-all duration-200 ${
                           isSelected
-                            ? 'border-brand-cyber bg-brand-cyber/5 shadow-[0_0_15px_rgba(0,114,255,0.1)]'
-                            : 'border-white/5 hover:border-white/10 bg-zinc-950/30'
+                            ? 'border-brand-cyber bg-brand-cyber/5 shadow-[0_0_15px_rgba(59,130,246,0.1)]'
+                            : 'border-brand-border hover:border-zinc-200 dark:hover:border-white/10 bg-white/50 dark:bg-zinc-950/30'
                         }`}
                       >
                         <div className="flex flex-col gap-0.5">
-                          <span className={`text-xs font-black ${isSelected ? 'text-brand-cyber' : 'text-white'}`}>
+                          <span className={`text-xs font-black ${isSelected ? 'text-brand-cyber' : 'text-zinc-800 dark:text-white'}`}>
                             {card.label}
                           </span>
-                          <span className="text-[10px] text-zinc-500 font-bold leading-normal">
+                          <span className="text-[10px] text-zinc-500 dark:text-zinc-400 font-bold leading-normal">
                             {card.desc}
                           </span>
                         </div>
@@ -281,8 +281,8 @@ export default function OnboardingPage() {
                         onClick={() => toggleTag(techStack, setTechStack, tech)}
                         className={`px-3 py-1.5 rounded-xl border text-[10px] font-bold uppercase tracking-wider transition-all duration-200 ${
                           isSelected
-                            ? 'bg-brand-cyber text-white border-brand-cyber shadow-[0_0_10px_rgba(0,114,255,0.2)]'
-                            : 'bg-zinc-900/30 border-white/5 text-zinc-400 hover:text-zinc-200'
+                            ? 'bg-brand-cyber text-white border-brand-cyber shadow-[0_0_10px_rgba(59,130,246,0.2)]'
+                            : 'bg-zinc-150/50 dark:bg-zinc-900/30 border-brand-border text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200'
                         }`}
                       >
                         {tech}
@@ -296,7 +296,7 @@ export default function OnboardingPage() {
                 type="button"
                 onClick={handleNextStep}
                 disabled={!focusArea || techStack.length === 0}
-                className="w-full py-4 px-4 rounded-2xl bg-gradient-to-r from-brand-cyber to-brand-level text-white disabled:opacity-40 disabled:pointer-events-none active:scale-98 text-xs font-black uppercase tracking-widest flex items-center justify-center gap-2 transition-all duration-200 shadow-[0_4px_20px_rgba(0,114,255,0.15)]"
+                className="w-full py-4 px-4 rounded-2xl bg-gradient-to-r from-brand-cyber to-brand-level text-white disabled:opacity-40 disabled:pointer-events-none active:scale-98 text-xs font-black uppercase tracking-widest flex items-center justify-center gap-2 transition-all duration-200 shadow-[0_4px_20px_rgba(59,130,246,0.15)]"
               >
                 Define Goals & Drivers <ArrowRight size={14} className="stroke-[2.5]" />
               </button>
@@ -316,10 +316,10 @@ export default function OnboardingPage() {
                 <span className="text-[9px] bg-brand-level/10 text-brand-level border border-brand-level/25 px-2.5 py-0.5 rounded-full font-bold uppercase tracking-widest">
                   Step 3 of 3: Goals & Interests
                 </span>
-                <h1 className="text-2xl font-black text-white tracking-tight mt-3">
+                <h1 className="text-2xl font-black text-zinc-900 dark:text-white tracking-tight mt-3">
                   Set your builder objectives
                 </h1>
-                <p className="text-xs text-zinc-400 mt-1 font-medium leading-relaxed">
+                <p className="text-xs text-zinc-550 dark:text-zinc-400 mt-1 font-medium leading-relaxed">
                   We match project opportunities and compatible teammates based on these preferences.
                 </p>
               </div>
@@ -337,14 +337,14 @@ export default function OnboardingPage() {
                         onClick={() => toggleTag(goals, setGoals, opt.id)}
                         className={`glass-panel p-3.5 rounded-2xl border text-left flex flex-col gap-1 transition-all duration-200 ${
                           isSelected
-                            ? 'border-brand-level bg-brand-level/5 shadow-[0_0_15px_rgba(157,78,221,0.1)]'
-                            : 'border-white/5 hover:border-white/10 bg-zinc-950/30'
+                            ? 'border-brand-level bg-brand-level/5 shadow-[0_0_15px_rgba(139,92,246,0.1)]'
+                            : 'border-brand-border hover:border-zinc-200 dark:hover:border-white/10 bg-white/50 dark:bg-zinc-950/30'
                         }`}
                       >
-                        <span className={`text-xs font-black ${isSelected ? 'text-brand-level' : 'text-white'}`}>
+                        <span className={`text-xs font-black ${isSelected ? 'text-brand-level' : 'text-zinc-800 dark:text-white'}`}>
                           {opt.label}
                         </span>
-                        <span className="text-[10px] text-zinc-500 font-bold leading-normal">
+                        <span className="text-[10px] text-zinc-500 dark:text-zinc-400 font-bold leading-normal">
                           {opt.desc}
                         </span>
                       </button>
@@ -366,8 +366,8 @@ export default function OnboardingPage() {
                         onClick={() => toggleTag(interests, setInterests, interest)}
                         className={`px-3 py-1.5 rounded-xl border text-[10px] font-bold uppercase tracking-wider transition-all duration-200 ${
                           isSelected
-                            ? 'bg-brand-level text-white border-brand-level shadow-[0_0_10px_rgba(157,78,221,0.25)]'
-                            : 'bg-zinc-900/30 border-white/5 text-zinc-400 hover:text-zinc-200'
+                            ? 'bg-brand-level text-white border-brand-level shadow-[0_0_10px_rgba(139,92,246,0.25)]'
+                            : 'bg-zinc-150/50 dark:bg-zinc-900/30 border-brand-border text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200'
                         }`}
                       >
                         {interest}
@@ -381,7 +381,7 @@ export default function OnboardingPage() {
                 type="button"
                 onClick={handleNextStep}
                 disabled={goals.length === 0 || interests.length === 0}
-                className="w-full py-4 px-4 rounded-2xl bg-gradient-to-r from-brand-level to-brand-xp text-black disabled:opacity-40 disabled:pointer-events-none active:scale-98 text-xs font-black uppercase tracking-widest flex items-center justify-center gap-2 transition-all duration-200 shadow-[0_4px_20px_rgba(157,78,221,0.15)]"
+                className="w-full py-4 px-4 rounded-2xl bg-gradient-to-r from-brand-level to-brand-xp text-white disabled:opacity-40 disabled:pointer-events-none active:scale-98 text-xs font-black uppercase tracking-widest flex items-center justify-center gap-2 transition-all duration-200 shadow-[0_4px_20px_rgba(139,92,246,0.15)]"
               >
                 Compile Identity <ArrowRight size={14} className="stroke-[2.5]" />
               </button>
